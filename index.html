@@ -5,6 +5,40 @@
   <title>Huge Gif</title>
 </head>
 <body>
-  
+  <script src="js/lib/jquery-1.10.2.min.js"></script>
+  <script src="js/lib/underscore-min.js"></script>
+  <script src="js/lib/backbone-min.js"></script>
+  <script>
+    // MODELS
+    Link = Backbone.Model.extend();
+
+    Subreddit = Backbone.Collection.extend({
+      model: Link,
+      url: "../api/"
+    });
+
+    // VIEWS
+    LinkView = Backbone.View.extend();
+
+    SubredditView = Backbone.View.extend();
+
+    // ROUTER
+    var AppRouter = Backbone.Router.extend({
+      routes:{
+        "":"index",
+        "r/:id":"subreddit"
+      },
+      index: function(){
+        alert("hello");
+      },
+      subreddit: function(id){
+        console.log(id);
+      }
+    });
+
+    // GO BABY GO!
+    var app = new AppRouter();
+    Backbone.history.start();
+  </script>
 </body>
 </html>
