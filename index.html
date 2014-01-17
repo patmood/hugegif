@@ -5,40 +5,103 @@
   <title>Huge Gif</title>
 </head>
 <body>
+  <div id="container"></div>
+
+  <script type="text/template" id="tpl-index">
+    <h1>Hello Word</h1>
+  </script>
+
+  <script type="text/template" id="tpl-links-list">
+    <h1>Subreddit</h2>
+    Links found: <%= links.length %>
+    <ul>
+      <% _.each(links, function(link){ %>
+        <li><%= link.get('data').title %></li>
+      <% }); %>
+    </ul>
+  </script>
   <script src="js/lib/jquery-1.10.2.min.js"></script>
   <script src="js/lib/underscore-min.js"></script>
   <script src="js/lib/backbone-min.js"></script>
   <script>
-    // MODELS
-    Link = Backbone.Model.extend();
 
-    Subreddit = Backbone.Collection.extend({
-      model: Link,
-      url: "../api/"
+    // MODELS
+    var Link = Backbone.Model.extend({
+        initialize:function(obj) {
+            // console.log("Created: ",obj.data.title);
+        }
+    });
+
+    var LinksList = Backbone.Collection.extend({
+        initialize: function(subreddit){
+          this.subreddit = subreddit
+        },
+        model: Link,
+        // subreddit: 'gif',
+        sync: function(method, model, options) {
+            var params = _.extend({
+                type: 'GET',
+                dataType: 'jsonp',
+                url: model.url(),
+                processData: false
+            }, options);
+
+            return $.ajax(params);
+        },
+        parse: function(response) {
+            return response.data.children;
+        },
+
+        url: function() {
+            return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=10&after=&jsonp=?";
+        }
     });
 
     // VIEWS
-    LinkView = Backbone.View.extend();
+    var LinksListView = Backbone.View.extend({
+      el: '#container',
+      initialize: function(subreddit) {
+        // Next line not doing anything
+        if(typeof subreddit === undefined || subreddit === "") {
+          console.log("no subreddit defined");
+          return false;
+        }
+        this.render(subreddit);
+      },
+      render: function(subreddit) {
+        var _this = this
+        var linksList = new LinksList(subreddit);
+        linksList.fetch({
+          success: function(linksList){
+            var template = _.template( $("#tpl-links-list").html(), {links: linksList.models} );
+            _this.$el.html(template);
+          }
+        });
+      }
+    });
 
-    SubredditView = Backbone.View.extend();
+    var linksListView = new LinksListView();
 
     // ROUTER
     var AppRouter = Backbone.Router.extend({
       routes:{
         "":"index",
-        "r/:id":"subreddit"
+        "r/:sub":"subreddit"
       },
       index: function(){
-        alert("hello");
+        console.log("hello world - index route");
       },
-      subreddit: function(id){
-        console.log(id);
+      subreddit: function(sub){
+        console.log(sub);
+        linksListView.render(sub);
       }
     });
 
     // GO BABY GO!
     var app = new AppRouter();
+
     Backbone.history.start();
+
   </script>
 </body>
 </html>
