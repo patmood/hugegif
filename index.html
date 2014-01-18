@@ -61,11 +61,7 @@
     var LinksListView = Backbone.View.extend({
       el: '#container',
       initialize: function(subreddit) {
-        // Next line not doing anything
-        if(typeof subreddit === undefined || subreddit === "") {
-          console.log("no subreddit defined");
-          return false;
-        }
+        if(typeof subreddit === 'undefined' || subreddit === '') return;
         this.render(subreddit);
       },
       render: function(subreddit) {
@@ -73,14 +69,26 @@
         var linksList = new LinksList(subreddit);
         linksList.fetch({
           success: function(linksList){
-            var template = _.template( $("#tpl-links-list").html(), {links: linksList.models} );
+            var template = _.template( $('#tpl-links-list').html(), {links: linksList.models} );
             _this.$el.html(template);
           }
         });
       }
     });
 
+    var IndexView = Backbone.View.extend({
+      el: '#container',
+      initialize: function(){
+        this.render();
+      },
+      render: function(){
+        var template = _.template( $('#tpl-index').html() );
+        this.$el.html(template);
+      }
+    });
+
     var linksListView = new LinksListView();
+    var indexView = new IndexView();
 
     // ROUTER
     var AppRouter = Backbone.Router.extend({
@@ -89,10 +97,9 @@
         "r/:sub":"subreddit"
       },
       index: function(){
-        console.log("hello world - index route");
+        indexView.render();
       },
       subreddit: function(sub){
-        console.log(sub);
         linksListView.render(sub);
       }
     });
