@@ -11,12 +11,22 @@
     <h1>Hello Word</h1>
   </script>
 
+  <script type="text/template" id="tpl-link">
+    <h1>Link Page</h1>
+    <p><%= link.get('data').url %></p>
+  </script>
+
   <script type="text/template" id="tpl-links-list">
     <h1>Subreddit</h2>
     Links found: <%= links.length %>
     <ul>
       <% _.each(links, function(link){ %>
-        <li><%= link.get('data').title %></li>
+        <li>
+          <a href=
+            <%= '#/r/'+link.get('data').subreddit+'/'+link.get('data').id %> >
+            <%= link.get('data').title %>
+          </a>
+        </li>
       <% }); %>
     </ul>
   </script>
@@ -24,10 +34,9 @@
   <script src="js/lib/underscore-min.js"></script>
   <script src="js/lib/backbone-min.js"></script>
   <script>
-
     // MODELS
     var Link = Backbone.Model.extend({
-        initialize:function(obj) {
+        initialize: function(obj) {
             // console.log("Created: ",obj.data.title);
         }
     });
@@ -37,7 +46,7 @@
           this.subreddit = subreddit
         },
         model: Link,
-        // subreddit: 'gif',
+        // subreddit: 'gif', // Default sub
         sync: function(method, model, options) {
             var params = _.extend({
                 type: 'GET',
@@ -57,7 +66,28 @@
         }
     });
 
+    var linksList = new LinksList();
+
     // VIEWS
+    var LinkView = Backbone.View.extend({
+      el: '#container',
+      initialize: function(){
+        this.render();
+      },
+      render: function(id){
+        var link = linksList.find(function(model) {
+          return model.get('data').id === id;
+        })
+        console.log('link:',link);
+        if(typeof link === 'undefined') return;
+        var template = _.template( $('#tpl-link').html(), {link: link} );
+        console.log(template);
+
+        this.$el.html(template);
+      }
+
+    });
+
     var LinksListView = Backbone.View.extend({
       el: '#container',
       initialize: function(subreddit) {
@@ -66,7 +96,7 @@
       },
       render: function(subreddit) {
         var _this = this
-        var linksList = new LinksList(subreddit);
+        linksList = new LinksList(subreddit);
         linksList.fetch({
           success: function(linksList){
             var template = _.template( $('#tpl-links-list').html(), {links: linksList.models} );
@@ -87,6 +117,7 @@
       }
     });
 
+    var linkView = new LinkView();
     var linksListView = new LinksListView();
     var indexView = new IndexView();
 
@@ -94,18 +125,24 @@
     var AppRouter = Backbone.Router.extend({
       routes:{
         "":"index",
-        "r/:sub":"subreddit"
+        "r/:sub":"subreddit",
+        "r/:sub/:id":"link"
       },
       index: function(){
         indexView.render();
       },
       subreddit: function(sub){
         linksListView.render(sub);
+      },
+      link: function(sub, id){
+        console.log(sub,'/',id);
+        linkView.render(id);
       }
+
     });
 
     // GO BABY GO!
-    var app = new AppRouter();
+    var router = new AppRouter();
 
     Backbone.history.start();
 

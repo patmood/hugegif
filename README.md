@@ -3,8 +3,9 @@
 For the ultimate reddit gif viewing experience using backbone.js and the Reddit.com API.
 
 ## TODO
-- create individual link view and template
-- create index template
+- fetch individual link model it's not found in the collection
+- parse reddit response to include 'next' and 'previous' and not fall under the 'data' namespace
+- investigate route transitioning for better redirecting
 
 ## Resources
 For my own reference:
