@@ -70,6 +70,9 @@ var LinksListView = Backbone.View.extend({
       success: function(linksList){
         var template = _.template( $('#tpl-links-list').html(), {links: linksList.models} );
         _this.$el.html(template);
+      },
+      error: function(){
+        router.notFound();
       }
     });
   }
@@ -86,16 +89,26 @@ var IndexView = Backbone.View.extend({
   }
 });
 
+var NotFoundView = Backbone.View.extend({
+  el: '#container',
+  render: function(){
+    var template = _.template( $('#tpl-not-found').html() );
+    this.$el.html(template);
+  }  
+});
+
 var linkView = new LinkView();
 var linksListView = new LinksListView();
 var indexView = new IndexView();
+var notFoundView = new NotFoundView();
 
 // ROUTER
 var AppRouter = Backbone.Router.extend({
   routes:{
     "":"index",
-    "r/:sub/":"subreddit",
-    "r/:sub/:id":"link"
+    "r/:sub":"subreddit",
+    "r/:sub/:id":"link",
+    "*path":"notFound"
   },
   index: function(){
     indexView.render();
@@ -106,6 +119,9 @@ var AppRouter = Backbone.Router.extend({
   link: function(sub, id){
     console.log(sub,'/',id);
     linkView.render(id);
+  },
+  notFound: function(){
+    notFoundView.render();
   }
 
 });
