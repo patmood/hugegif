@@ -1,16 +1,17 @@
 // MODELS
 var Link = Backbone.Model.extend({
   initialize: function(obj) {
-        // console.log("Created: ",obj.data.title);
+        // console.log("Created: ",obj.title);
       }
     });
 
+// COLLECTIONS
 var LinksList = Backbone.Collection.extend({
   initialize: function(subreddit){
     this.subreddit = subreddit
   },
   model: Link,
-    // subreddit: 'gif', // Default sub
+    subreddit: 'gif', // Default sub
     sync: function(method, model, options) {
       var params = _.extend({
         type: 'GET',
@@ -22,7 +23,11 @@ var LinksList = Backbone.Collection.extend({
       return $.ajax(params);
     },
     parse: function(response) {
-      return response.data.children;
+      var collection = []
+      for(var i = 0; i < response.data.children.length; i++){
+        collection.push(response.data.children[i].data);
+      }
+      return collection;
     },
 
     url: function() {
@@ -40,7 +45,7 @@ var LinkView = Backbone.View.extend({
   },
   render: function(id){
     var link = linksList.find(function(model) {
-      return model.get('data').id === id;
+      return model.get('id') === id;
     })
     console.log('link:',link);
     if(typeof link === 'undefined') return;
@@ -89,7 +94,7 @@ var indexView = new IndexView();
 var AppRouter = Backbone.Router.extend({
   routes:{
     "":"index",
-    "r/:sub":"subreddit",
+    "r/:sub/":"subreddit",
     "r/:sub/:id":"link"
   },
   index: function(){

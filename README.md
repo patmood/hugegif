@@ -4,8 +4,10 @@ For the ultimate reddit gif viewing experience using backbone.js and the Reddit.
 
 ## TODO
 - fetch individual link model it's not found in the collection
-- parse reddit response to include 'next' and 'previous' and not fall under the 'data' namespace
 - investigate route transitioning for better redirecting
+- 404 not found page
+- filter for imgur links
+- show image on link view
 
 ## Resources
 For my own reference:

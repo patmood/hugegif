@@ -13,7 +13,7 @@
 
   <script type="text/template" id="tpl-link">
     <h1>Link Page</h1>
-    <p><%= link.get('data').url %></p>
+    <p><%= link.get('url') %></p>
   </script>
 
   <script type="text/template" id="tpl-links-list">
@@ -23,8 +23,8 @@
       <% _.each(links, function(link){ %>
         <li>
           <a href=
-            <%= '#/r/'+link.get('data').subreddit+'/'+link.get('data').id %> >
-            <%= link.get('data').title %>
+            <%= '#/r/'+link.get('subreddit')+'/'+link.get('id') %> >
+            <%= link.get('title') %>
           </a>
         </li>
       <% }); %>
