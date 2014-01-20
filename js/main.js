@@ -25,7 +25,15 @@ var LinksList = Backbone.Collection.extend({
     parse: function(response) {
       var collection = []
       for(var i = 0; i < response.data.children.length; i++){
-        collection.push(response.data.children[i].data);
+        var link = response.data.children[i].data;
+        if(link.url.match(/\.gif$/ig)){
+          collection.push(link);
+        }else if(link.url.match(/^.+imgur\.com\/(\w+$)/ig) && !link.url.match(/^.+imgur\.com\/a\//ig)){
+          console.log((/^.+imgur\.com\/(\w+$)/ig).exec(link.url));
+          var imgurId = (/^.+imgur\.com\/(\w+$)/ig).exec(link.url)[1];
+          link.url = 'http://i.imgur.com/';
+          collection.push(link);
+        }
       }
       return collection;
     },

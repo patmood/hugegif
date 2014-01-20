@@ -4,7 +4,9 @@ For the ultimate reddit gif viewing experience using backbone.js and the Reddit.
 
 ## TODO
 - fetch individual link model it's not found in the collection
-- filter for imgur links
+- add next and previous links to each model
+- add 'fetch after' logic
+- route to show any imgur link
 
 ## Resources
 For my own reference:
