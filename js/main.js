@@ -29,9 +29,8 @@ var LinksList = Backbone.Collection.extend({
         if(link.url.match(/\.gif$/ig)){
           collection.push(link);
         }else if(link.url.match(/^.+imgur\.com\/(\w+$)/ig) && !link.url.match(/^.+imgur\.com\/a\//ig)){
-          console.log((/^.+imgur\.com\/(\w+$)/ig).exec(link.url));
           var imgurId = (/^.+imgur\.com\/(\w+$)/ig).exec(link.url)[1];
-          link.url = 'http://i.imgur.com/';
+          link.url = 'http://i.imgur.com/'+imgurId+'.gif';
           collection.push(link);
         }
       }
