@@ -3,10 +3,10 @@
 For the ultimate reddit gif viewing experience using backbone.js and the Reddit.com API.
 
 ## TODO
+- Keyboard navigation
 - fetch individual link model it's not found in the collection
-- add next and previous links to each model
+- upload image
 - add 'fetch after' logic
-- route to show any imgur link
 
 ## Resources
 For my own reference:

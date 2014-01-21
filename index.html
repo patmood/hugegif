@@ -13,12 +13,21 @@
   </script>
 
   <script type="text/template" id="tpl-link">
+    <a href=<%= '#/r/' + link.get('subreddit') + '/' + link.get('prev') %>>Prev</a>
+    <a href=<%= '#/r/' + link.get('subreddit') + '/' + link.get('next') %>>Next</a>
     <h1>
       <a href=<%= 'http://reddit.com' + link.get('permalink')  %>>
         <%= link.get('title') %>
       </a>
     </h1>
     <img src="<%= link.get('url') %>">
+  </script>
+
+  <script type="text/template" id="tpl-imgur-link">
+    <h1>
+      Title goes here <%= image %>
+    </h1>
+    <img src=<%= 'http://i.imgur.com/' + image + '.gif' %>>
   </script>
 
   <script type="text/template" id="tpl-links-list">

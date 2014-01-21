@@ -1,9 +1,12 @@
 // MODELS
 var Link = Backbone.Model.extend({
   initialize: function(obj) {
-        // console.log("Created: ",obj.title);
-      }
-    });
+    console.log("Created: ",obj);
+  }
+});
+
+var Imgur = Backbone.Model.extend({
+});
 
 // COLLECTIONS
 var LinksList = Backbone.Collection.extend({
@@ -26,12 +29,22 @@ var LinksList = Backbone.Collection.extend({
       var collection = []
       for(var i = 0; i < response.data.children.length; i++){
         var link = response.data.children[i].data;
+        // Only add gifs
         if(link.url.match(/\.gif$/ig)){
           collection.push(link);
         }else if(link.url.match(/^.+imgur\.com\/(\w+$)/ig) && !link.url.match(/^.+imgur\.com\/a\//ig)){
           var imgurId = (/^.+imgur\.com\/(\w+$)/ig).exec(link.url)[1];
           link.url = 'http://i.imgur.com/'+imgurId+'.gif';
           collection.push(link);
+        }
+      }
+      // Add next and previous links
+      for(var i = 0; i < collection.length; i++){
+        if(i + 1 < collection.length){
+          collection[i].next = collection[i+1].id;
+        }
+        if(i - 1 > 0){
+          collection[i].prev = collection[i-1].id;
         }
       }
       return collection;
@@ -96,18 +109,28 @@ var IndexView = Backbone.View.extend({
   }
 });
 
+var ImgurView = Backbone.View.extend({
+  el: '#container',
+  render: function(id){
+    var image = id;
+    var template = _.template( $('#tpl-imgur-link').html(), { image: image });
+    this.$el.html(template);
+  }
+})
+
 var NotFoundView = Backbone.View.extend({
   el: '#container',
   render: function(){
     var template = _.template( $('#tpl-not-found').html() );
     this.$el.html(template);
-  }  
+  }
 });
 
 var linkView = new LinkView();
 var linksListView = new LinksListView();
 var indexView = new IndexView();
 var notFoundView = new NotFoundView();
+var imgurView = new ImgurView();
 
 // ROUTER
 var AppRouter = Backbone.Router.extend({
@@ -115,6 +138,7 @@ var AppRouter = Backbone.Router.extend({
     "":"index",
     "r/:sub":"subreddit",
     "r/:sub/:id":"link",
+    ":imgur_id":"imgur",
     "*path":"notFound"
   },
   index: function(){
@@ -126,6 +150,9 @@ var AppRouter = Backbone.Router.extend({
   link: function(sub, id){
     console.log(sub,'/',id);
     linkView.render(id);
+  },
+  imgur: function(imgur_id){
+    imgurView.render(imgur_id);
   },
   notFound: function(){
     notFoundView.render();
