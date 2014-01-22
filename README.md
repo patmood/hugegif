@@ -3,7 +3,6 @@
 For the ultimate reddit gif viewing experience using backbone.js and the Reddit.com API.
 
 ## TODO
-- Keyboard navigation
 - fetch individual link model it's not found in the collection
 - upload image
 - add 'fetch after' logic

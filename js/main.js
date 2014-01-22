@@ -1,11 +1,7 @@
 // MODELS
 var Link = Backbone.Model.extend({
   initialize: function(obj) {
-    console.log("Created: ",obj);
   }
-});
-
-var Imgur = Backbone.Model.extend({
 });
 
 // COLLECTIONS
@@ -64,16 +60,33 @@ var LinkView = Backbone.View.extend({
     this.render();
   },
   render: function(id){
-    var link = linksList.find(function(model) {
+    this.model = linksList.find(function(model) {
       return model.get('id') === id;
     })
-    console.log('link:',link);
-    if(typeof link === 'undefined') return;
-    var template = _.template( $('#tpl-link').html(), {link: link} );
-    console.log(template);
-
+    if(typeof this.model === 'undefined') return;
+    var template = _.template( $('#tpl-link').html(), {link: this.model} );
     this.$el.html(template);
+  },
+  events: {
+    'keydown' : 'keyNav',
+    'click #prev' : 'prevLink',
+    'click #next' : 'nextLink',
+    'click #hugegif' : 'nextLink'
+  },
+  keyNav: function(e){
+    var key = e.which
+    console.log(e);
+    if(key == 32) console.log("space");
+    else if(key === 39) console.log("right");
+    else if(key === 37) console.log("left");
+  },
+  prevLink: function(){
+    router.navigate('r/' + this.model.get('subreddit') + '/' + this.model.get('prev'), {trigger: true});
+  },
+  nextLink: function(){
+    router.navigate('r/' + this.model.get('subreddit') + '/' + this.model.get('next'), {trigger: true});
   }
+
 
 });
 
@@ -148,7 +161,6 @@ var AppRouter = Backbone.Router.extend({
     linksListView.render(sub);
   },
   link: function(sub, id){
-    console.log(sub,'/',id);
     linkView.render(id);
   },
   imgur: function(imgur_id){
