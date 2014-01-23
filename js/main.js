@@ -6,8 +6,9 @@ var Link = Backbone.Model.extend({
 
 // COLLECTIONS
 var LinksList = Backbone.Collection.extend({
-  initialize: function(subreddit){
+  initialize: function(subreddit, after){
     this.subreddit = subreddit
+    this.after = after
   },
   model: Link,
   sync: function(method, model, options) {
@@ -45,7 +46,7 @@ var LinksList = Backbone.Collection.extend({
     return collection;
   },
   url: function() {
-    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=10&after=&jsonp=?";
+    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=10&after=" + this.after + "&jsonp=?";
   }
 });
 
@@ -82,10 +83,14 @@ var LinkView = Backbone.View.extend({
     else if(key === 37) console.log("left");
   },
   prevLink: function(){
-    router.navigate('/r/' + this.model.get('subreddit') + '/' + this.model.get('prev'), {trigger: true});
+    if( this.model.get('prev') ){
+      router.navigate('/r/' + this.model.get('subreddit') + '/' + this.model.get('prev'), {trigger: true});
+    }
   },
   nextLink: function(){
-    router.navigate('/r/' + this.model.get('subreddit') + '/' + this.model.get('next'), {trigger: true});
+    if( this.model.get('next') ){
+      router.navigate('/r/' + this.model.get('subreddit') + '/' + this.model.get('next'), {trigger: true});
+    }
   }
 
 

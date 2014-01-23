@@ -2,6 +2,8 @@
 
 For the ultimate reddit gif viewing experience using backbone.js and the Reddit.com API.
 
+[DEMO](http://patmood.github.io/hugegif)
+
 ## TODO
 - disable next/previous if undefined
 - fetch individual link model it's not found in the collection
