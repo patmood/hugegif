@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Huge Gif</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <div id="container"></div>
@@ -13,18 +14,26 @@
   </script>
 
   <script type="text/template" id="tpl-link">
-    <% if(link.get('prev')){ %>
-      <button id="prev">Prev</button>
-    <% } %>
-    <% if(link.get('next')){ %>
-      <button id="next">Next</button>
-    <% } %>
-    <h1>
-      <a href=<%= 'http://reddit.com' + link.get('permalink')  %>>
-        <%= link.get('title') %>
-      </a>
-    </h1>
-    <img id="hugegif" src="<%= link.get('url') %>">
+    <div class="overlay">
+      <input id="subreddit" placeholder="/r/gif">
+      <% if(link.get('prev')){ %>
+        <button id="prev">Prev</button>
+      <% } %>
+      <% if(link.get('next')){ %>
+        <button id="next">Next</button>
+      <% } %>
+      <div id="title">
+        <h1>
+          <a href=<%= 'http://reddit.com' + link.get('permalink')  %>>
+            <%= link.get('title') %>
+          </a>
+        </h1>
+      </div>
+    </div>
+
+    <div id="huge">
+      <img id="hugegif" src="<%= link.get('url') %>">
+    </div>
   </script>
 
   <script type="text/template" id="tpl-imgur-link">

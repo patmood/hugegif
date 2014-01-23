@@ -1,0 +1,90 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+body {
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  font-weight: 300;
+  line-height: 1;
+}
+#huge {
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+}
+#huge img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  min-width: 50%;
+  min-height: 50%;
+}
+button {
+  border: none;
+  font-size: 16px;
+  background: #34495e;
+  color: #fff;
+  cursor: pointer;
+  padding: 5px 10px;
+  margin: 10px 5px;
+  outline: none;
+  position: relative;
+  border-radius: 5px;
+  vertical-align: top;
+}
+.overlay {
+  z-index: 99;
+  position: relative;
+  margin-top: 0px;
+  width: 100%;
+  background-color: rgba(54,54,54,0.5);
+}
+#prev { display: inline-block; }
+#next { display: inline-block; }
+#title { padding: 5px; }
+#title, #title h1, #title a{
+  color: #fff;
+  font-size: 36px;
+  display: inline-block;
+  text-decoration: none;
+}
+#title a:hover {
+  color: #e67e22;
+}
+#subreddit {
+  margin: 10px 5px;
+  vertical-align: top;
+  padding: 3px;
+  border-radius: 5px;
+  border: none;
+  font-size: 18px;
+  width: 130px;
+}
+@media screen and (min-width: 0px) and (max-width: 800px) {
+  #next,#prev,#subreddit { display: none; };
+}
