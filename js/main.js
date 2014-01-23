@@ -6,9 +6,8 @@ var Link = Backbone.Model.extend({
 
 // COLLECTIONS
 var LinksList = Backbone.Collection.extend({
-  initialize: function(subreddit, after){
+  initialize: function(subreddit){
     this.subreddit = subreddit
-    this.after = after
   },
   model: Link,
   sync: function(method, model, options) {
@@ -43,6 +42,9 @@ var LinksList = Backbone.Collection.extend({
         collection[i].prev = collection[i-1].id;
       }
     }
+    console.log('response', response.data.after);
+    this.before = response.data.before;
+    this.after = response.data.after;
     return collection;
   },
   url: function() {
