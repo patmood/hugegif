@@ -13,8 +13,12 @@
   </script>
 
   <script type="text/template" id="tpl-link">
-    <button id="prev">Prev</button>
-    <button id="next">Next</button>
+    <% if(link.get('prev')){ %>
+      <button id="prev">Prev</button>
+    <% } %>
+    <% if(link.get('next')){ %>
+      <button id="next">Next</button>
+    <% } %>
     <h1>
       <a href=<%= 'http://reddit.com' + link.get('permalink')  %>>
         <%= link.get('title') %>
