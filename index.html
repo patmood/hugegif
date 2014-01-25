@@ -28,15 +28,24 @@
     </div>
 
     <div id="huge">
-      <img id="hugegif" src="<%= link.get('url') %>">
+      <img id="hugegif" src=<%= link.get('url') %>>
     </div>
   </script>
 
   <script type="text/template" id="tpl-imgur-link">
-    <h1>
-      Title goes here <%= image %>
-    </h1>
-    <img src=<%= 'http://i.imgur.com/' + image + '.gif' %>>
+    <% if(image.get('title')){ %>
+      <div class="overlay">
+        <div id="title">
+          <h1>
+            <%= image.get('title') %>
+          </h1>
+        </div>
+      </div>
+    <% } %>
+
+    <div id="huge">
+      <img id="hugegif" src=<%= image.get('link') %>>
+    </div>
   </script>
 
   <script type="text/template" id="tpl-links-list">

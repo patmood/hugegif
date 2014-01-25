@@ -4,6 +4,25 @@ var Link = Backbone.Model.extend({
   }
 });
 
+var Imgur = Backbone.Model.extend({
+  initialize: function(id){
+    this.set({id: id});
+  },
+  sync: function(method, model, options) {
+    var params =  _.extend({
+      type: 'GET',
+      url: 'https://api.imgur.com/3/image/' + this.get('id'),
+      headers: { 'Authorization': 'Client-ID 2b577f722a2e8e9' }
+      }, options)
+
+    return $.ajax(params);
+  },
+  parse: function(response) {
+    console.log('imgur response:', response.data);
+    return response.data;
+  }
+});
+
 // COLLECTIONS
 var LinksList = Backbone.Collection.extend({
   initialize: function(subreddit){
@@ -131,11 +150,20 @@ var IndexView = Backbone.View.extend({
 });
 
 var ImgurView = Backbone.View.extend({
+  model: Imgur,
   el: '#container',
   render: function(id){
-    var image = id;
-    var template = _.template( $('#tpl-imgur-link').html(), { image: image });
-    this.$el.html(template);
+    var _this = this;
+    var imgurObj = new Imgur(id);
+    imgurObj.fetch({
+      success: function(){
+        var template = _.template( $('#tpl-imgur-link').html(), { image: imgurObj });
+        _this.$el.html(template);
+      },
+      error: function(){
+        alert("no imgur at this id or whatever");
+      }
+    });
   }
 })
 
