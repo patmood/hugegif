@@ -161,7 +161,7 @@ var ImgurView = Backbone.View.extend({
         _this.$el.html(template);
       },
       error: function(){
-        alert("no imgur at this id or whatever");
+        router.notFound();
       }
     });
   }
