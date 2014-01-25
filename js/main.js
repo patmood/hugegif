@@ -38,7 +38,7 @@ var LinksList = Backbone.Collection.extend({
       if(i + 1 < collection.length){
         collection[i].next = collection[i+1].id;
       }
-      if(i - 1 > 0){
+      if(i - 1 >= 0){
         collection[i].prev = collection[i-1].id;
       }
     }
@@ -156,11 +156,11 @@ var imgurView = new ImgurView();
 // ROUTER
 var AppRouter = Backbone.Router.extend({
   routes:{
-    "":"index",
-    "r/:sub":"subreddit",
-    "r/:sub/:id":"link",
-    ":imgur_id":"imgur",
-    "*path":"notFound"
+    '':'index',
+    'r/:sub':'subreddit',
+    'r/:sub/:id':'link',
+    ':imgur_id':'imgur',
+    '*path':'notFound'
   },
   index: function(){
     indexView.render();
