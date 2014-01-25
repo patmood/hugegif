@@ -5,8 +5,9 @@ For the ultimate reddit gif viewing experience using backbone.js and the Reddit.
 [DEMO](http://patmood.github.io/hugegif)
 
 ## TODO
-- fetch individual link model it's not found in the collection
+- link to comments in title
 - upload image
+- fetch individual link model it's not found in the collection
 - add 'fetch after' logic
 
 ## Resources
