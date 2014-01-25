@@ -38,7 +38,7 @@ var LinksList = Backbone.Collection.extend({
       if(i + 1 < collection.length){
         collection[i].next = collection[i+1].id;
       }
-      if(i - 1 > 0){
+      if(i - 1 >= 0){
         collection[i].prev = collection[i-1].id;
       }
     }
