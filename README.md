@@ -6,8 +6,8 @@ For the ultimate reddit gif viewing experience using backbone.js and the Reddit.
 
 ## TODO
 - upload image
+- Long titles wrap buttons
 - fix keyboard nav
-- make subreddit with with or without slash
 - fetch individual link model it's not found in the collection
 - add 'fetch after' logic
 

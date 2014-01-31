@@ -185,8 +185,8 @@ var imgurView = new ImgurView();
 var AppRouter = Backbone.Router.extend({
   routes:{
     '':'index',
-    'r/:sub':'subreddit',
-    'r/:sub/:id':'link',
+    'r/:sub(/)':'subreddit',
+    'r/:sub/:id(/)':'link',
     ':imgur_id':'imgur',
     '*path':'notFound'
   },
