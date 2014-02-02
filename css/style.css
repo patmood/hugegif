@@ -85,6 +85,23 @@ button {
   font-size: 18px;
   width: 130px;
 }
+#index-title {
+  font-size: 102px;
+  font-size: 15vw;
+  font-weight: 900;
+  color: #222;
+  text-align: center;
+  display: block;
+  margin: 3%;
+}
+#random {
+  width: 300px;
+  font-size: 48px;
+  font-size: 5vw;
+  margin: auto;
+  padding: 1% 3%;
+  display: block;
+}
 @media screen and (min-width: 0px) and (max-width: 800px) {
   #next,#prev,#subreddit { display: none; };
 }
