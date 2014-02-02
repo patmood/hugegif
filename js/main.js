@@ -146,6 +146,12 @@ var IndexView = Backbone.View.extend({
   render: function(){
     var template = _.template( $('#tpl-index').html() );
     this.$el.html(template);
+  },
+  events: {
+    'click #random': 'randomSub'
+  },
+  randomSub: function(){
+    router.navigate('/r/gif', {trigger: true});
   }
 });
 
