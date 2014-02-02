@@ -6,6 +6,8 @@ For the ultimate reddit gif viewing experience using backbone.js and the Reddit.
 
 ## TODO
 - upload image
+- Index page
+- Handle hugegif.com links if they come from reddit
 - Long titles wrap buttons
 - fix keyboard nav
 - fetch individual link model it's not found in the collection
