@@ -176,7 +176,7 @@ var ImgurView = Backbone.View.extend({
 var NotFoundView = Backbone.View.extend({
   el: '#container',
   initialize: function(){
-    this.render;
+    this.render();
   },
   render: function(){
     var template = _.template( $('#tpl-not-found').html() );
@@ -187,7 +187,6 @@ var NotFoundView = Backbone.View.extend({
 var linkView = new LinkView();
 var linksListView = new LinksListView();
 var indexView = new IndexView();
-var notFoundView = new NotFoundView();
 var imgurView = new ImgurView();
 
 // ROUTER
@@ -217,7 +216,7 @@ var AppRouter = Backbone.Router.extend({
   },
   notFound: function(){
     $('#contailer').unbind()
-    new NotFoundView();
+    var notFoundView = new NotFoundView();
   }
 
 });
