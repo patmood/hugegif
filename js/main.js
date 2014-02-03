@@ -186,7 +186,7 @@ var NotFoundView = Backbone.View.extend({
 
 var linkView = new LinkView();
 var linksListView = new LinksListView();
-var indexView = new IndexView();
+
 var imgurView = new ImgurView();
 
 // ROUTER
@@ -200,7 +200,7 @@ var AppRouter = Backbone.Router.extend({
   },
   index: function(){
     $('#contailer').unbind()
-    indexView.render();
+    var indexView = new IndexView();
   },
   subreddit: function(sub){
     $('#contailer').unbind()
