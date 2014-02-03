@@ -175,6 +175,9 @@ var ImgurView = Backbone.View.extend({
 
 var NotFoundView = Backbone.View.extend({
   el: '#container',
+  initialize: function(){
+    this.render;
+  },
   render: function(){
     var template = _.template( $('#tpl-not-found').html() );
     this.$el.html(template);
@@ -197,19 +200,24 @@ var AppRouter = Backbone.Router.extend({
     '*path':'notFound'
   },
   index: function(){
+    $('#contailer').unbind()
     indexView.render();
   },
   subreddit: function(sub){
+    $('#contailer').unbind()
     linksListView.render(sub);
   },
   link: function(sub, id){
+    $('#contailer').unbind()
     linkView.render(sub, id);
   },
   imgur: function(imgur_id){
+    $('#contailer').unbind()
     imgurView.render(imgur_id);
   },
   notFound: function(){
-    notFoundView.render();
+    $('#contailer').unbind()
+    new NotFoundView();
   }
 
 });
