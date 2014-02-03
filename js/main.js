@@ -158,9 +158,13 @@ var IndexView = Backbone.View.extend({
 var ImgurView = Backbone.View.extend({
   model: Imgur,
   el: '#container',
-  render: function(id){
+  initialize: function(obj){
+    this.render();
+  },
+  render: function(){
+    console.log('rendering imgur view...');
     var _this = this;
-    var imgurObj = new Imgur(id);
+    var imgurObj = new Imgur(this.id);
     imgurObj.fetch({
       success: function(){
         var template = _.template( $('#tpl-imgur-link').html(), { image: imgurObj });
@@ -175,7 +179,7 @@ var ImgurView = Backbone.View.extend({
 
 var NotFoundView = Backbone.View.extend({
   el: '#container',
-  initialize: function(){
+  initialize: function() {
     this.render();
   },
   render: function(){
@@ -187,7 +191,7 @@ var NotFoundView = Backbone.View.extend({
 var linkView = new LinkView();
 var linksListView = new LinksListView();
 
-var imgurView = new ImgurView();
+
 
 // ROUTER
 var AppRouter = Backbone.Router.extend({
@@ -199,23 +203,24 @@ var AppRouter = Backbone.Router.extend({
     '*path':'notFound'
   },
   index: function(){
-    $('#contailer').unbind()
+    $('#contailer').unbind();
     var indexView = new IndexView();
   },
   subreddit: function(sub){
-    $('#contailer').unbind()
+    $('#contailer').unbind();
     linksListView.render(sub);
   },
   link: function(sub, id){
-    $('#contailer').unbind()
+    $('#contailer').unbind();
     linkView.render(sub, id);
   },
   imgur: function(imgur_id){
-    $('#contailer').unbind()
-    imgurView.render(imgur_id);
+    $('#contailer').unbind();
+    console.log('new view using id:',imgur_id);
+    var imgurView = new ImgurView({id: imgur_id});
   },
   notFound: function(){
-    $('#contailer').unbind()
+    $('#contailer').unbind();
     var notFoundView = new NotFoundView();
   }
 
