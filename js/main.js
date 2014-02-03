@@ -1,13 +1,8 @@
 // MODELS
 var Link = Backbone.Model.extend({
-  initialize: function(obj) {
-  }
 });
 
 var Imgur = Backbone.Model.extend({
-  initialize: function(id){
-    this.set({id: id});
-  },
   sync: function(method, model, options) {
     var params =  _.extend({
       type: 'GET',
@@ -164,7 +159,7 @@ var ImgurView = Backbone.View.extend({
   render: function(){
     console.log('rendering imgur view...');
     var _this = this;
-    var imgurObj = new Imgur(this.id);
+    var imgurObj = new Imgur({id: this.id});
     imgurObj.fetch({
       success: function(){
         var template = _.template( $('#tpl-imgur-link').html(), { image: imgurObj });
