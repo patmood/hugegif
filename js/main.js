@@ -20,8 +20,8 @@ var Imgur = Backbone.Model.extend({
 
 // COLLECTIONS
 var LinksList = Backbone.Collection.extend({
-  initialize: function(subreddit){
-    this.subreddit = subreddit
+  initialize: function(obj){
+    this.subreddit = obj.subreddit;
   },
   model: Link,
   sync: function(method, model, options) {
@@ -56,7 +56,6 @@ var LinksList = Backbone.Collection.extend({
         collection[i].prev = collection[i-1].id;
       }
     }
-    console.log('response', response.data.after);
     this.before = response.data.before;
     this.after = response.data.after;
     return collection;
@@ -66,17 +65,20 @@ var LinksList = Backbone.Collection.extend({
   }
 });
 
-var linksList = new LinksList();
+var linksList;
 
 // VIEWS
 var LinkView = Backbone.View.extend({
   el: '#container',
-  initialize: function(){
+  initialize: function(obj){
+    // this.sub = obj.sub;
+    // this.id = obj.id
     this.render();
   },
-  render: function(sub, id){
+  render: function(){
+    var _this = this;
     this.model = linksList.find(function(model) {
-      return model.get('id') === id;
+      return model.get('id') === _this.id;
     })
     if(typeof this.model === 'undefined'){
       console.log('fetch model here');
@@ -114,13 +116,13 @@ var LinkView = Backbone.View.extend({
 
 var LinksListView = Backbone.View.extend({
   el: '#container',
-  initialize: function(subreddit) {
-    if(typeof subreddit === 'undefined' || subreddit === '') return;
-    this.render(subreddit);
+  initialize: function(obj) {
+    this.subreddit = obj.subreddit;
+    this.render();
   },
-  render: function(subreddit) {
-    var _this = this
-    linksList = new LinksList(subreddit);
+  render: function() {
+    var _this = this;
+    linksList = new LinksList({subreddit: this.subreddit});
     linksList.fetch({
       success: function(linksList){
         var template = _.template( $('#tpl-links-list').html(), {links: linksList.models} );
@@ -183,10 +185,6 @@ var NotFoundView = Backbone.View.extend({
   }
 });
 
-var linkView = new LinkView();
-var linksListView = new LinksListView();
-
-
 
 // ROUTER
 var AppRouter = Backbone.Router.extend({
@@ -203,11 +201,11 @@ var AppRouter = Backbone.Router.extend({
   },
   subreddit: function(sub){
     $('#contailer').unbind();
-    linksListView.render(sub);
+    var linksListView = new LinksListView({subreddit: sub});
   },
   link: function(sub, id){
     $('#contailer').unbind();
-    linkView.render(sub, id);
+    var linkView = new LinkView({sub: sub, id: id});
   },
   imgur: function(imgur_id){
     $('#contailer').unbind();
