@@ -1,5 +1,7 @@
 // MODELS
 var Link = Backbone.Model.extend({
+  initialize: function(obj){
+  }
 });
 
 var Imgur = Backbone.Model.extend({
@@ -13,7 +15,6 @@ var Imgur = Backbone.Model.extend({
     return $.ajax(params);
   },
   parse: function(response) {
-    console.log('imgur response:', response.data);
     return response.data;
   }
 });
@@ -71,9 +72,8 @@ var linksList;
 var LinkView = Backbone.View.extend({
   el: '#container',
   initialize: function(obj){
-    // this.sub = obj.sub;
-    // this.id = obj.id
     this.render();
+    $('body').keydown(_.bind(this.keyNav, this));
   },
   render: function(){
     var _this = this;
@@ -95,10 +95,9 @@ var LinkView = Backbone.View.extend({
   },
   keyNav: function(e){
     var key = e.which
-    console.log(e);
-    if(key == 32) console.log("space");
-    else if(key === 39) console.log("right");
-    else if(key === 37) console.log("left");
+    if(key == 32) this.nextLink(); // space
+    else if(key === 39) this.nextLink(); // right
+    else if(key === 37) this.prevLink(); // left
   },
   prevLink: function(){
     if( this.model.get('prev') ){
@@ -196,25 +195,28 @@ var AppRouter = Backbone.Router.extend({
     '*path':'notFound'
   },
   index: function(){
-    $('#contailer').unbind();
+    this.unbindAll();
     var indexView = new IndexView();
   },
   subreddit: function(sub){
-    $('#contailer').unbind();
+    this.unbindAll();
     var linksListView = new LinksListView({subreddit: sub});
   },
   link: function(sub, id){
-    $('#contailer').unbind();
+    this.unbindAll();
     var linkView = new LinkView({sub: sub, id: id});
   },
   imgur: function(imgur_id){
-    $('#contailer').unbind();
-    console.log('new view using id:',imgur_id);
+    this.unbindAll();
     var imgurView = new ImgurView({id: imgur_id});
   },
   notFound: function(){
-    $('#contailer').unbind();
+    this.unbindAll();
     var notFoundView = new NotFoundView();
+  },
+  unbindAll: function(){
+    $('#container').unbind();
+    $("body").unbind('keydown');
   }
 
 });
