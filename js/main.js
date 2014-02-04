@@ -62,7 +62,7 @@ var LinksList = Backbone.Collection.extend({
     return collection;
   },
   url: function() {
-    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=10&after=" + this.after + "&jsonp=?";
+    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=100&after=" + this.after + "&jsonp=?";
   }
 });
 
