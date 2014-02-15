@@ -21,3 +21,5 @@ For my own reference:
 [Example backbone repo](https://github.com/thomasdavis/backbonetutorials/blob/gh-pages/videos/beginner/index.html)
 
 [Backbone Tutorials](http://backbonetutorials.com/)
+
+[Fetch backbone model when it's now found in the collection](http://lostechies.com/derickbailey/2012/02/03/get-a-model-from-a-backbone-collection-without-knowing-if-the-collection-is-loaded/)

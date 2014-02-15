@@ -11,7 +11,11 @@
 
   <script type="text/template" id="tpl-index">
     <h1 id="index-title">HUGEGIF</h1>
-    <button id="random">Start</button>
+    <h2>The Ultimate Reddit Gif Viewing Experience</h2>
+    <h3>Some of our favourite reddits:</h3>
+    <% _.each(favReddits, function(reddit){ %>
+      <button class="feature"><%= reddit %></button>
+    <% }) %>
   </script>
 
   <script type="text/template" id="tpl-link">

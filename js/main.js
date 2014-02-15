@@ -140,14 +140,14 @@ var IndexView = Backbone.View.extend({
     this.render();
   },
   render: function(){
-    var template = _.template( $('#tpl-index').html() );
+    var template = _.template( $('#tpl-index').html(), favReddits );
     this.$el.html(template);
   },
   events: {
-    'click #random': 'randomSub'
+    'click .feature': 'featureSub'
   },
-  randomSub: function(){
-    router.navigate('/r/gif', {trigger: true});
+  featureSub: function(e){
+    router.navigate(e.target.innerText, {trigger: true});
   }
 });
 
@@ -223,5 +223,11 @@ var AppRouter = Backbone.Router.extend({
 
 // GO BABY GO!
 var router = new AppRouter();
+var favReddits = [
+  '/r/gif',
+  '/r/reactiongifs',
+  '/r/animalsbeingjerks',
+  '/r/thestopgirl'
+]
 
 Backbone.history.start();
