@@ -1,6 +1,22 @@
 // MODELS
 var Link = Backbone.Model.extend({
   initialize: function(obj){
+  },
+  sync: function(method, model, options) {
+    var params = _.extend({
+      type: 'GET',
+      dataType: 'jsonp',
+      url: model.url(),
+      processData: false
+    }, options);
+
+    return $.ajax(params);
+  },
+  parse: function(response){
+    console.log("BOOYAH!",response)
+  },
+  url: function() {
+    return "http://www.reddit.com/r/" + this.get('sub') + "/" + this.id + ".json&jsonp=?"
   }
 });
 
@@ -66,25 +82,16 @@ var LinksList = Backbone.Collection.extend({
   }
 });
 
-var linksList;
-
 // VIEWS
 var LinkView = Backbone.View.extend({
   el: '#container',
-  initialize: function(obj){
-    this.render();
+  initialize: function(){
     $('body').keydown(_.bind(this.keyNav, this));
   },
-  render: function(){
+  render: function(model){
+    this.model = model
     var _this = this;
-    this.model = linksList.find(function(model) {
-      return model.get('id') === _this.id;
-    })
-    if(typeof this.model === 'undefined'){
-      console.log('fetch model here');
-      return;
-    }
-    var template = _.template( $('#tpl-link').html(), {link: this.model} );
+    var template = _.template( $('#tpl-link').html(), {link: model} );
     this.$el.html(template);
   },
   events: {
@@ -210,7 +217,31 @@ var AppRouter = Backbone.Router.extend({
   },
   link: function(sub, id){
     this.unbindAll();
-    var linkView = new LinkView({sub: sub, id: id});
+    var link = new Link({sub: sub, id: id})
+
+    // Search the collection (if one exists)
+    if(linksList){
+      var foundLink = linksList.find(function(model) {
+        return model.get('id') === link.id;
+      })
+    }
+
+    // Create the view
+    var linkView = new LinkView()
+
+    // Fetch the model if it wasnt found, otherwise render
+    if(typeof foundLink === 'undefined'){
+      console.log('fetching individual link model here')
+      link.fetch({
+        success: function(model, response){
+          console.log('SUCCESS! Got model, response:',model, response)
+          linkView.render(foundLink)
+        }
+      })
+    } else {
+      linkView.render(foundLink)
+    }
+
   },
   imgur: function(imgur_id){
     this.unbindAll();
@@ -228,6 +259,7 @@ var AppRouter = Backbone.Router.extend({
 });
 
 // GO BABY GO!
+var linksList
 var router = new AppRouter();
 var favReddits = [
   '/r/gif',
