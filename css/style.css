@@ -45,6 +45,12 @@ h3 {
   display: block;
   margin: 3%;
 }
+#enter-sub {
+  vertical-align: top;
+  border-radius: 5px;
+  border: solid 2px #888;
+  text-align: center;
+}
 #huge {
   position: fixed;
   top: -50%;

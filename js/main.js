@@ -144,10 +144,16 @@ var IndexView = Backbone.View.extend({
     this.$el.html(template);
   },
   events: {
-    'click .feature': 'featureSub'
+    'click .feature' : 'featureSub',
+    'keydown #enter-sub' : 'featureSub'
   },
   featureSub: function(e){
-    router.navigate(e.target.innerText, {trigger: true});
+    console.log(e)
+    if(e.type === 'keydown' && e.keyCode === 13) {
+      router.navigate(e.target.value, {trigger: true})
+    } else if(e.type === 'click') {
+      router.navigate(e.target.innerText, {trigger: true})
+    }
   }
 });
 
