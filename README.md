@@ -6,10 +6,8 @@ For the ultimate reddit gif viewing experience using backbone.js and the Reddit.
 
 ## TODO
 - fetch individual link model it's not found in the collection *SEMI WORKING*
-- parse input from text fields to handle "/r/" prefix
 - upload image
 - Handle hugegif.com links if they come from reddit
-- Long titles wrap buttons
 - add 'fetch after' logic
 
 ## Resources

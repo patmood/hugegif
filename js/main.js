@@ -6,14 +6,17 @@ var Link = Backbone.Model.extend({
     var params = _.extend({
       type: 'GET',
       dataType: 'jsonp',
-      url: model.url(),
+      url: this.url(),
       processData: false
     }, options);
 
+    console.log('fetching model')
     return $.ajax(params);
   },
   parse: function(response){
+    // This function isnt needed... yet
     console.log("BOOYAH!",response)
+    return response
   },
   url: function() {
     return "http://www.reddit.com/r/" + this.get('sub') + "/" + this.id + ".json&jsonp=?"
@@ -45,13 +48,15 @@ var LinksList = Backbone.Collection.extend({
     var params = _.extend({
       type: 'GET',
       dataType: 'jsonp',
-      url: model.url(),
+      url: this.url(),
       processData: false
     }, options);
 
+    console.log('fetching for collection')
     return $.ajax(params);
   },
   parse: function(response) {
+    console.log('parsing collection')
     var collection = []
     for(var i = 0; i < response.data.children.length; i++){
       var link = response.data.children[i].data;
@@ -78,7 +83,7 @@ var LinksList = Backbone.Collection.extend({
     return collection;
   },
   url: function() {
-    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=100&after=" + this.after + "&jsonp=?";
+    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=10&after=" + this.after + "&jsonp=?";
   }
 });
 
@@ -157,7 +162,8 @@ var IndexView = Backbone.View.extend({
   featureSub: function(e){
     console.log(e)
     if(e.type === 'keydown' && e.keyCode === 13) {
-      router.navigate(e.target.value, {trigger: true})
+      var sub = '/r/' + e.target.value.match(/\w+$/ig)
+      router.navigate(sub, {trigger: true})
     } else if(e.type === 'click') {
       router.navigate(e.target.innerText, {trigger: true})
     }
