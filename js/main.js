@@ -14,12 +14,12 @@ var Link = Backbone.Model.extend({
     return $.ajax(params);
   },
   parse: function(response){
-    // This function isnt needed... yet
+    console.log("parsing!")
     console.log("BOOYAH!",response)
-    return response
+    return response // [0].data.children.data
   },
   url: function() {
-    return "http://www.reddit.com/r/" + this.get('sub') + "/" + this.id + ".json&jsonp=?"
+    return "http://www.reddit.com/r/" + this.get('sub') + "/comments/" + this.id + "/.json&jsonp=?"
   }
 });
 
@@ -246,7 +246,7 @@ var AppRouter = Backbone.Router.extend({
       link.fetch({
         success: function(model, response){
           console.log('SUCCESS! Got model, response:',model, response)
-          linkView.render(foundLink)
+          linkView.render(model)
         }
       })
     } else {
