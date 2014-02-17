@@ -67,6 +67,11 @@ var LinksList = Backbone.Collection.extend({
         var imgurId = (/^.+imgur\.com\/(\w+$)/ig).exec(link.url)[1];
         link.url = 'http://i.imgur.com/'+imgurId+'.gif';
         collection.push(link);
+      }else if(link.url.match(/hugegif.com/ig) && !link.url.match(/\/r\//igi)){
+        // handle hugegif links that go to imgur
+        var imgurId = link.url.match(/\w+$/)
+        link.url = 'http://i.imgur.com/'+imgurId+'.gif';
+        collection.push(link);
       }
     }
     // Add next and previous links
