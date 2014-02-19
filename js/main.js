@@ -181,7 +181,7 @@ var IndexView = Backbone.View.extend({
     this.render();
   },
   render: function(){
-    var template = _.template( $('#tpl-index').html(), favReddits );
+    var template = _.template( $('#tpl-index').html(), indexData );
     this.$el.html(template);
   },
   events: {
@@ -300,11 +300,21 @@ var AppRouter = Backbone.Router.extend({
 // GO BABY GO!
 var linksList
 var router = new AppRouter();
-var favReddits = [
-  '/r/gif',
-  '/r/reactiongifs',
-  '/r/animalsbeingjerks',
-  '/r/thestopgirl'
-]
+var indexData = {
+  favReddits: [
+    '/r/gif',
+    '/r/reactiongifs',
+    '/r/animalsbeingjerks',
+    '/r/thestopgirl'
+  ],
+  background: [
+    'http://i.imgur.com/JBbb77q.gif',
+    'http://i.imgur.com/0Hp3N0q.gif',
+    'http://i.imgur.com/mfYNrVs.gif',
+    'http://i.imgur.com/IHSmDlD.gif',
+    'http://i.imgur.com/iQTQTT1.gif',
+    'http://i.imgur.com/w8Eyy6T.gif'
+  ]
+}
 
 Backbone.history.start();

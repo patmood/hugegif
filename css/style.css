@@ -50,6 +50,14 @@ h3 {
   border-radius: 5px;
   border: solid 2px #888;
   text-align: center;
+  margin-bottom: 20px;
+}
+.index-container {
+  background: rgba(255,255,255,.8);
+  max-width: 800px;
+  padding: 20px;
+  margin: 30px auto;
+  border-radius: 10px;
 }
 #huge {
   position: fixed;
@@ -57,6 +65,7 @@ h3 {
   left: -50%;
   width: 200%;
   height: 200%;
+  z-index: -13;
 }
 #huge img {
   position: absolute;

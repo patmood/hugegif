@@ -5,9 +5,8 @@ For the ultimate reddit gif viewing experience using backbone.js and the Reddit.
 [DEMO](http://patmood.github.io/hugegif)
 
 ## TODO
-- move parse logic to the model to filter out non animated images
 - show 'not found' when going to an individual link that fails to fetch
-- gif background image on index page
+- handle imgur .gif link extensions
 - upload image
 - add 'fetch after' logic
 

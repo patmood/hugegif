@@ -10,14 +10,18 @@
   <div id="container"></div>
 
   <script type="text/template" id="tpl-index">
-    <h1 id="index-title">HUGEGIF</h1>
-    <h2>The Ultimate Reddit Gif Viewing Experience</h2>
-    <h3>Some of our favourite reddits:</h3>
-    <% _.each(favReddits, function(reddit){ %>
-      <button class="feature"><%= reddit %></button>
-    <% }) %>
-    <input id="enter-sub" class="feature" placeholder="/r/gif">
-
+    <div class="index-container">
+      <h1 id="index-title">HUGEGIF</h1>
+      <h2>The Ultimate Reddit Gif Viewing Experience</h2>
+      <h3>Some of our favourite reddits:</h3>
+      <% _.each(indexData.favReddits, function(reddit){ %>
+        <button class="feature"><%= reddit %></button>
+      <% }) %>
+      <input id="enter-sub" class="feature" placeholder="/r/gif">
+    </div>
+    <div id="huge">
+      <img id="hugegif" src=<%= _.sample(indexData.background) %>>
+    </div>
   </script>
 
   <script type="text/template" id="tpl-link">
