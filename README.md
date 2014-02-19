@@ -5,6 +5,7 @@ For the ultimate reddit gif viewing experience using backbone.js and the Reddit.
 [DEMO](http://patmood.github.io/hugegif)
 
 ## TODO
+- move parse logic to the model to filter out non animated images
 - upload image
 - add 'fetch after' logic
 

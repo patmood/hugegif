@@ -93,7 +93,7 @@ var LinksList = Backbone.Collection.extend({
     return collection;
   },
   url: function() {
-    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=10&after=" + this.after;
+    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=200&after=" + this.after;
   }
 });
 
@@ -138,22 +138,31 @@ var LinkView = Backbone.View.extend({
 var LinksListView = Backbone.View.extend({
   el: '#container',
   initialize: function(obj) {
-    this.subreddit = obj.subreddit;
-    this.render();
-  },
-  render: function() {
-    var _this = this;
+    this.subreddit = obj.subreddit
     linksList = new LinksList({subreddit: this.subreddit});
     linksList.fetch({
       success: function(linksList){
-        var template = _.template( $('#tpl-links-list').html(), {links: linksList.models} );
-        _this.$el.html(template);
+        router.navigate('/r/' + this.subreddit + '/' + linksList.models[0].id, {trigger: true});
       },
       error: function(){
         router.notFound();
       }
     });
-  }
+    // this.render();
+  },
+  // render: function() {
+  //   var _this = this;
+  //   linksList = new LinksList({subreddit: this.subreddit});
+  //   linksList.fetch({
+  //     success: function(linksList){
+  //       var template = _.template( $('#tpl-links-list').html(), {links: linksList.models} );
+  //       _this.$el.html(template);
+  //     },
+  //     error: function(){
+  //       router.notFound();
+  //     }
+  //   });
+  // }
 });
 
 var IndexView = Backbone.View.extend({
