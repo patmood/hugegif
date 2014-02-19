@@ -6,6 +6,7 @@ var Link = Backbone.Model.extend({
     var params = _.extend({
       type: 'GET',
       dataType: 'jsonp',
+      jsonp: 'jsonp',
       url: this.url(),
       processData: false
     }, options);
@@ -15,11 +16,14 @@ var Link = Backbone.Model.extend({
   },
   parse: function(response){
     console.log("parsing!")
-    console.log("BOOYAH!",response)
-    return response // [0].data.children.data
+    if (Object.prototype.toString.call(response) === '[object Array]'){
+      return response[0].data.children[0].data
+    } else {
+      return response
+    }
   },
   url: function() {
-    return "http://www.reddit.com/r/" + this.get('sub') + "/comments/" + this.id + "/.json&jsonp=?"
+    return "http://www.reddit.com/r/" + this.get('sub') + "/comments/" + this.id + "/.json"
   }
 });
 
@@ -48,6 +52,7 @@ var LinksList = Backbone.Collection.extend({
     var params = _.extend({
       type: 'GET',
       dataType: 'jsonp',
+      jsonp: 'jsonp',
       url: this.url(),
       processData: false
     }, options);
@@ -88,7 +93,7 @@ var LinksList = Backbone.Collection.extend({
     return collection;
   },
   url: function() {
-    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=10&after=" + this.after + "&jsonp=?";
+    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=10&after=" + this.after;
   }
 });
 
