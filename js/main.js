@@ -16,11 +16,14 @@ var Link = Backbone.Model.extend({
   },
   parse: function(response){
     console.log("parsing!")
+    var res
     if (Object.prototype.toString.call(response) === '[object Array]'){
-      return response[0].data.children[0].data
+      res = parseGifObject(response[0].data.children[0].data)
     } else {
-      return response
+      res = response
     }
+    console.log(res)
+    return res
   },
   url: function() {
     return "http://www.reddit.com/r/" + this.get('sub') + "/comments/" + this.id + "/.json"
@@ -65,18 +68,10 @@ var LinksList = Backbone.Collection.extend({
     var collection = []
     for(var i = 0; i < response.data.children.length; i++){
       var link = response.data.children[i].data;
-      // Only add gifs
-      if(link.url.match(/\.gif$/ig)){
-        collection.push(link);
-      }else if(link.url.match(/^.+imgur\.com\/(\w+$)/ig) && !link.url.match(/^.+imgur\.com\/a\//ig)){
-        var imgurId = (/^.+imgur\.com\/(\w+$)/ig).exec(link.url)[1];
-        link.url = 'http://i.imgur.com/'+imgurId+'.gif';
-        collection.push(link);
-      }else if(link.url.match(/hugegif.com/ig) && !link.url.match(/\/r\//igi)){
-        // handle hugegif links that go to imgur
-        var imgurId = link.url.match(/\w+$/)
-        link.url = 'http://i.imgur.com/'+imgurId+'.gif';
-        collection.push(link);
+      link = parseGifObject(link)
+
+      if(link !== undefined){
+        collection.push(link)
       }
     }
     // Add next and previous links
@@ -93,9 +88,25 @@ var LinksList = Backbone.Collection.extend({
     return collection;
   },
   url: function() {
-    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=200&after=" + this.after;
+    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=100&after=" + this.after;
   }
 });
+
+// Helper to filter out and sanitize links
+var parseGifObject = function(obj){
+  if(obj.url.match(/\.gif$/ig)){
+    return obj
+  }else if(obj.url.match(/^.+imgur\.com\/(\w+$)/ig) && !obj.url.match(/^.+imgur\.com\/a\//ig)){
+    var imgurId = (/^.+imgur\.com\/(\w+$)/ig).exec(obj.url)[1]
+    obj.url = 'http://i.imgur.com/'+imgurId+'.gif'
+    return obj
+  }else if(obj.url.match(/hugegif.com/ig) && !obj.url.match(/\/r\//igi)){
+    // handle hugegif links that go to imgur
+    var imgurId = obj.url.match(/\w+$/)
+    obj.url = 'http://i.imgur.com/'+imgurId+'.gif'
+    return obj
+  }
+}
 
 // VIEWS
 var LinkView = Backbone.View.extend({
@@ -139,16 +150,15 @@ var LinksListView = Backbone.View.extend({
   el: '#container',
   initialize: function(obj) {
     this.subreddit = obj.subreddit
-    linksList = new LinksList({subreddit: this.subreddit});
+    linksList = new LinksList({subreddit: obj.subreddit});
     linksList.fetch({
       success: function(linksList){
-        router.navigate('/r/' + this.subreddit + '/' + linksList.models[0].id, {trigger: true});
+        router.navigate('/r/' + obj.subreddit + '/' + linksList.models[0].id, {trigger: true});
       },
       error: function(){
         router.notFound();
       }
     });
-    // this.render();
   },
   // render: function() {
   //   var _this = this;
@@ -242,6 +252,7 @@ var AppRouter = Backbone.Router.extend({
   },
   link: function(sub, id){
     this.unbindAll();
+    // TODO: this logic should prolly go into the view initializer or something
     var link = new Link({sub: sub, id: id})
 
     // Search the collection (if one exists)
@@ -261,6 +272,9 @@ var AppRouter = Backbone.Router.extend({
         success: function(model, response){
           console.log('SUCCESS! Got model, response:',model, response)
           linkView.render(model)
+        },
+        error: function(){
+          console.log("Link route failed to fetch the link model :( lolfail")
         }
       })
     } else {
