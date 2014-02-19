@@ -302,6 +302,7 @@ var linksList
 var router = new AppRouter();
 var indexData = {
   favReddits: [
+    '/r/gifs',
     '/r/gif',
     '/r/reactiongifs',
     '/r/animalsbeingjerks',
