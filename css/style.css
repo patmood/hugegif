@@ -84,7 +84,7 @@ button {
   color: #fff;
   cursor: pointer;
   padding: 5px 10px;
-  margin: 10px 5px;
+  margin: 10px 2px;
   outline: none;
   position: relative;
   border-radius: 5px;
@@ -127,4 +127,18 @@ button {
 }
 @media screen and (min-width: 0px) and (max-width: 800px) {
   #next,#prev,#subreddit { display: none; };
+}
+#prev:hover::after, #next:hover::after {
+  position: absolute;
+  top: 40px;
+  left: 10px;
+  content: "PROTIP: Use arrow keys or click image";
+  color: #222;
+  width: 180px;
+  padding: 5px;
+  background: #fff;
+  border-radius: 8px;
+}
+.home {
+  fill: #fff;
 }

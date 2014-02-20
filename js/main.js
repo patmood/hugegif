@@ -124,7 +124,8 @@ var LinkView = Backbone.View.extend({
     'keydown' : 'keyNav',
     'click #prev' : 'prevLink',
     'click #next' : 'nextLink',
-    'click #hugegif' : 'nextLink'
+    'click #hugegif' : 'nextLink',
+    'click #home' : 'goHome'
   },
   keyNav: function(e){
     var key = e.which
@@ -134,16 +135,17 @@ var LinkView = Backbone.View.extend({
   },
   prevLink: function(){
     if( this.model.get('prev') ){
-      router.navigate('/r/' + this.model.get('subreddit') + '/' + this.model.get('prev'), {trigger: true});
+      router.navigate('/r/' + this.model.get('subreddit') + '/' + this.model.get('prev'), {trigger: true})
     }
   },
   nextLink: function(){
     if( this.model.get('next') ){
-      router.navigate('/r/' + this.model.get('subreddit') + '/' + this.model.get('next'), {trigger: true});
+      router.navigate('/r/' + this.model.get('subreddit') + '/' + this.model.get('next'), {trigger: true})
     }
+  },
+  goHome: function(){
+    router.navigate('/', {trigger: true})
   }
-
-
 });
 
 var LinksListView = Backbone.View.extend({
