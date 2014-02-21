@@ -6,12 +6,10 @@ For the ultimate reddit gif viewing experience using backbone.js and the Reddit.
 
 ## TODO
 - show 'not found' when going to an individual link that fails to fetch
-- show tooltip when clicking next/prev
 - load subreddit collection when individual link is fetched 
 - upload image
 - add 'fetch after' logic
 - media queries to make sure mobile looks hot
-- add zoom meta tag stuff for phones
 
 ## Resources
 For my own reference:

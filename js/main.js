@@ -22,7 +22,6 @@ var Link = Backbone.Model.extend({
     } else {
       res = response
     }
-    console.log(res)
     return res
   },
   url: function() {
@@ -48,7 +47,8 @@ var Imgur = Backbone.Model.extend({
 // COLLECTIONS
 var LinksList = Backbone.Collection.extend({
   initialize: function(obj){
-    this.subreddit = obj.subreddit;
+    this.subreddit = obj.subreddit
+    this.after = obj.after
   },
   model: Link,
   sync: function(method, model, options) {
@@ -85,10 +85,10 @@ var LinksList = Backbone.Collection.extend({
     }
     this.before = response.data.before;
     this.after = response.data.after;
-    return collection;
+    return collection
   },
   url: function() {
-    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=100&after=" + this.after;
+    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=10&after=" + this.after
   }
 });
 
@@ -116,9 +116,30 @@ var LinkView = Backbone.View.extend({
   },
   render: function(model){
     this.model = model
-    var _this = this;
-    var template = _.template( $('#tpl-link').html(), {link: model} );
-    this.$el.html(template);
+    var _this = this
+    var template
+
+    // TODO: 2 cases, enter app fresh or reach end of collection
+    if((typeof model.get('next') == 'undefined') && (linksList.models.length <= 1)){
+      linksList = new LinksList({subreddit: model.get('subreddit'), after: 't3_' + model.id});
+      linksList.fetch({
+        success: function(linksList){
+          _this.model.set({ next: linksList.models[0].id })
+          linksList.models[0].set({ prev: model.id })
+          linksList.add(_this.model)
+          template = _.template( $('#tpl-link').html(), {link: model} );
+          _this.$el.html(template);
+        },
+        error: function(){
+          router.notFound();
+        }
+      });
+    } else {
+      template = _.template( $('#tpl-link').html(), {link: model} )
+      _this.$el.html(template)
+    }
+
+
   },
   events: {
     'keydown' : 'keyNav',
@@ -160,22 +181,9 @@ var LinksListView = Backbone.View.extend({
       error: function(){
         router.notFound();
       }
-    });
-  },
-  // render: function() {
-  //   var _this = this;
-  //   linksList = new LinksList({subreddit: this.subreddit});
-  //   linksList.fetch({
-  //     success: function(linksList){
-  //       var template = _.template( $('#tpl-links-list').html(), {links: linksList.models} );
-  //       _this.$el.html(template);
-  //     },
-  //     error: function(){
-  //       router.notFound();
-  //     }
-  //   });
-  // }
-});
+    })
+  }
+})
 
 var IndexView = Backbone.View.extend({
   el: '#container',
@@ -191,7 +199,6 @@ var IndexView = Backbone.View.extend({
     'keydown #enter-sub' : 'featureSub'
   },
   featureSub: function(e){
-    console.log(e)
     if(e.type === 'keydown' && e.keyCode === 13) {
       var sub = '/r/' + e.target.value.match(/\w+$/ig)
       router.navigate(sub, {trigger: true})
@@ -208,7 +215,6 @@ var ImgurView = Backbone.View.extend({
     this.render();
   },
   render: function(){
-    console.log('rendering imgur view...');
     var _this = this;
     var imgurObj = new Imgur({id: this.id});
     imgurObj.fetch({
@@ -300,8 +306,8 @@ var AppRouter = Backbone.Router.extend({
 });
 
 // GO BABY GO!
-var linksList
-var router = new AppRouter();
+var linksList = new LinksList({ subreddit: 'gifs' })
+var router = new AppRouter()
 var indexData = {
   favReddits: [
     '/r/gifs',
