@@ -1,20 +1,20 @@
 // MODELS
 var Link = Backbone.Model.extend({
   initialize: function(obj){
-  },
-  sync: function(method, model, options) {
+  }
+, sync: function(method, model, options) {
     var params = _.extend({
-      type: 'GET',
-      dataType: 'jsonp',
-      jsonp: 'jsonp',
-      url: this.url(),
-      processData: false
-    }, options);
+      type: 'GET'
+    , dataType: 'jsonp'
+    , jsonp: 'jsonp'
+    , url: this.url()
+    , processData: false
+    }, options)
 
     console.log('fetching model')
-    return $.ajax(params);
-  },
-  parse: function(response){
+    return $.ajax(params)
+  }
+, parse: function(response){
     console.log("parsing!")
     var res
     if (Object.prototype.toString.call(response) === '[object Array]'){
@@ -23,51 +23,51 @@ var Link = Backbone.Model.extend({
       res = response
     }
     return res
-  },
-  url: function() {
+  }
+, url: function() {
     return "http://www.reddit.com/r/" + this.get('sub') + "/comments/" + this.id + "/.json"
   }
-});
+})
 
 var Imgur = Backbone.Model.extend({
   sync: function(method, model, options) {
     var params =  _.extend({
-      type: 'GET',
-      url: 'https://api.imgur.com/3/image/' + this.get('id'),
-      headers: { 'Authorization': 'Client-ID 2b577f722a2e8e9' }
+      type: 'GET'
+    , url: 'https://api.imgur.com/3/image/' + this.get('id')
+    , headers: { 'Authorization': 'Client-ID 2b577f722a2e8e9' }
       }, options)
 
-    return $.ajax(params);
-  },
-  parse: function(response) {
-    return response.data;
+    return $.ajax(params)
   }
-});
+, parse: function(response) {
+    return response.data
+  }
+})
 
 // COLLECTIONS
 var LinksList = Backbone.Collection.extend({
   initialize: function(obj){
     this.subreddit = obj.subreddit
     this.after = obj.after
-  },
-  model: Link,
-  sync: function(method, model, options) {
+  }
+, model: Link
+, sync: function(method, model, options) {
     var params = _.extend({
-      type: 'GET',
-      dataType: 'jsonp',
-      jsonp: 'jsonp',
-      url: this.url(),
-      processData: false
-    }, options);
+      type: 'GET'
+    , dataType: 'jsonp'
+    , jsonp: 'jsonp'
+    , url: this.url()
+    , processData: false
+    }, options)
 
     console.log('fetching for collection')
-    return $.ajax(params);
-  },
-  parse: function(response) {
+    return $.ajax(params)
+  }
+, parse: function(response) {
     console.log('parsing collection')
     var collection = []
     for(var i = 0; i < response.data.children.length; i++){
-      var link = response.data.children[i].data;
+      var link = response.data.children[i].data
       link = parseGifObject(link)
 
       if(link !== undefined){
@@ -77,20 +77,20 @@ var LinksList = Backbone.Collection.extend({
     // Add next and previous links
     for(var i = 0; i < collection.length; i++){
       if(i + 1 < collection.length){
-        collection[i].next = collection[i+1].id;
+        collection[i].next = collection[i+1].id
       }
       if(i - 1 >= 0){
-        collection[i].prev = collection[i-1].id;
+        collection[i].prev = collection[i-1].id
       }
     }
-    this.before = response.data.before;
-    this.after = response.data.after;
+    this.before = response.data.before
+    this.after = response.data.after
     return collection
-  },
-  url: function() {
+  }
+, url: function() {
     return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=10&after=" + this.after
   }
-});
+})
 
 // Helper to filter out and sanitize links
 var parseGifObject = function(obj){
@@ -110,95 +110,95 @@ var parseGifObject = function(obj){
 
 // VIEWS
 var LinkView = Backbone.View.extend({
-  el: '#container',
-  initialize: function(){
-    $('body').keydown(_.bind(this.keyNav, this));
-  },
-  render: function(model){
+  el: '#container'
+, initialize: function(){
+    $('body').keydown(_.bind(this.keyNav, this))
+  }
+, render: function(model){
     this.model = model
     var _this = this
     var template
 
     // TODO: 2 cases, enter app fresh or reach end of collection
     if((typeof model.get('next') == 'undefined') && (linksList.models.length <= 1)){
-      linksList = new LinksList({subreddit: model.get('subreddit'), after: 't3_' + model.id});
+      linksList = new LinksList({subreddit: model.get('subreddit'), after: 't3_' + model.id})
       linksList.fetch({
         success: function(linksList){
           _this.model.set({ next: linksList.models[0].id })
           linksList.models[0].set({ prev: model.id })
           linksList.add(_this.model)
-          template = _.template( $('#tpl-link').html(), {link: model} );
-          _this.$el.html(template);
+          template = _.template( $('#tpl-link').html(), {link: model} )
+          _this.$el.html(template)
         },
         error: function(){
-          router.notFound();
+          router.notFound()
         }
-      });
+      })
     } else {
       template = _.template( $('#tpl-link').html(), {link: model} )
       _this.$el.html(template)
     }
 
 
-  },
-  events: {
-    'keydown' : 'keyNav',
-    'click #prev' : 'prevLink',
-    'click #next' : 'nextLink',
-    'click #hugegif' : 'nextLink',
-    'click #home' : 'goHome'
-  },
-  keyNav: function(e){
+  }
+, events: {
+    'keydown' : 'keyNav'
+  , 'click #prev' : 'prevLink'
+  , 'click #next' : 'nextLink'
+  , 'click #hugegif' : 'nextLink'
+  , 'click #home' : 'goHome'
+  }
+, keyNav: function(e){
     var key = e.which
-    if(key == 32) this.nextLink(); // space
-    else if(key === 39) this.nextLink(); // right
-    else if(key === 37) this.prevLink(); // left
-  },
-  prevLink: function(){
+    if(key == 32) this.nextLink() // space
+    else if(key === 39) this.nextLink() // right
+    else if(key === 37) this.prevLink() // left
+  }
+, prevLink: function(){
     if( this.model.get('prev') ){
       router.navigate('/r/' + this.model.get('subreddit') + '/' + this.model.get('prev'), {trigger: true})
     }
-  },
-  nextLink: function(){
+  }
+, nextLink: function(){
     if( this.model.get('next') ){
       router.navigate('/r/' + this.model.get('subreddit') + '/' + this.model.get('next'), {trigger: true})
     }
-  },
-  goHome: function(){
+  }
+, goHome: function(){
     router.navigate('/', {trigger: true})
   }
-});
+})
 
 var LinksListView = Backbone.View.extend({
-  el: '#container',
-  initialize: function(obj) {
+  el: '#container'
+, initialize: function(obj) {
     this.subreddit = obj.subreddit
-    linksList = new LinksList({subreddit: obj.subreddit});
+    linksList = new LinksList({subreddit: obj.subreddit})
     linksList.fetch({
       success: function(linksList){
-        router.navigate('/r/' + obj.subreddit + '/' + linksList.models[0].id, {trigger: true});
-      },
-      error: function(){
-        router.notFound();
+        router.navigate('/r/' + obj.subreddit + '/' + linksList.models[0].id, {trigger: true})
+      }
+    , error: function(){
+        router.notFound()
       }
     })
   }
 })
 
 var IndexView = Backbone.View.extend({
-  el: '#container',
-  initialize: function(){
-    this.render();
-  },
-  render: function(){
-    var template = _.template( $('#tpl-index').html(), indexData );
-    this.$el.html(template);
-  },
-  events: {
-    'click .feature' : 'featureSub',
-    'keydown #enter-sub' : 'featureSub'
-  },
-  featureSub: function(e){
+  el: '#container'
+, initialize: function(){
+    this.render()
+  }
+, render: function(){
+    var template = _.template( $('#tpl-index').html(), indexData )
+    this.$el.html(template)
+  }
+, events: {
+    'click .feature' : 'featureSub'
+  , 'keydown #enter-sub' : 'featureSub'
+  }
+, featureSub: function(e){
     if(e.type === 'keydown' && e.keyCode === 13) {
       var sub = '/r/' + e.target.value.match(/\w+$/ig)
       router.navigate(sub, {trigger: true})
@@ -206,67 +206,67 @@ var IndexView = Backbone.View.extend({
       router.navigate(e.target.innerText, {trigger: true})
     }
   }
-});
+})
 
 var ImgurView = Backbone.View.extend({
-  model: Imgur,
-  el: '#container',
-  initialize: function(obj){
-    this.render();
-  },
-  render: function(){
-    var _this = this;
-    var imgurObj = new Imgur({id: this.id});
+  model: Imgur
+, el: '#container'
+, initialize: function(obj){
+    this.render()
+  }
+, render: function(){
+    var _this = this
+    var imgurObj = new Imgur({id: this.id})
     imgurObj.fetch({
       success: function(){
-        var template = _.template( $('#tpl-imgur-link').html(), { image: imgurObj });
-        _this.$el.html(template);
-      },
-      error: function(){
-        router.notFound();
+        var template = _.template( $('#tpl-imgur-link').html(), { image: imgurObj })
+        _this.$el.html(template)
       }
-    });
+    , error: function(){
+        router.notFound()
+      }
+    })
   }
 })
 
 var NotFoundView = Backbone.View.extend({
   el: '#container',
   initialize: function() {
-    this.render();
+    this.render()
   },
   render: function(){
-    var template = _.template( $('#tpl-not-found').html() );
-    this.$el.html(template);
+    var template = _.template( $('#tpl-not-found').html() )
+    this.$el.html(template)
   }
-});
+})
 
 
 // ROUTER
 var AppRouter = Backbone.Router.extend({
   routes:{
-    '':'index',
-    'r/:sub(/)':'subreddit',
-    'r/:sub/:id(/)':'link',
-    ':imgur_id':'imgur',
-    '*path':'notFound'
-  },
-  index: function(){
-    this.unbindAll();
-    var indexView = new IndexView();
-  },
-  subreddit: function(sub){
-    this.unbindAll();
-    var linksListView = new LinksListView({subreddit: sub});
-  },
-  link: function(sub, id){
-    this.unbindAll();
+    '':'index'
+  , 'r/:sub(/)':'subreddit'
+  , 'r/:sub/:id(/)':'link'
+  , ':imgur_id':'imgur'
+  , '*path':'notFound'
+  }
+, index: function(){
+    this.unbindAll()
+    var indexView = new IndexView()
+  }
+, subreddit: function(sub){
+    this.unbindAll()
+    var linksListView = new LinksListView({subreddit: sub})
+  }
+, link: function(sub, id){
+    this.unbindAll()
     // TODO: this logic should prolly go into the view initializer or something
     var link = new Link({sub: sub, id: id})
 
     // Search the collection (if one exists)
     if(linksList){
       var foundLink = linksList.find(function(model) {
-        return model.get('id') === link.id;
+        return model.get('id') === link.id
       })
     }
 
@@ -289,41 +289,41 @@ var AppRouter = Backbone.Router.extend({
       linkView.render(foundLink)
     }
 
-  },
-  imgur: function(imgur_id){
-    this.unbindAll();
-    var imgurView = new ImgurView({id: imgur_id});
-  },
-  notFound: function(){
-    this.unbindAll();
-    var notFoundView = new NotFoundView();
-  },
-  unbindAll: function(){
-    $('#container').unbind();
-    $("body").unbind('keydown');
+  }
+, imgur: function(imgur_id){
+    this.unbindAll()
+    var imgurView = new ImgurView({id: imgur_id})
+  }
+, notFound: function(){
+    this.unbindAll()
+    var notFoundView = new NotFoundView()
+  }
+, unbindAll: function(){
+    $('#container').unbind()
+    $("body").unbind('keydown')
   }
 
-});
+})
 
 // GO BABY GO!
 var linksList = new LinksList({ subreddit: 'gifs' })
-var router = new AppRouter()
-var indexData = {
-  favReddits: [
-    '/r/gifs',
-    '/r/gif',
-    '/r/reactiongifs',
-    '/r/animalsbeingjerks',
-    '/r/thestopgirl'
-  ],
-  background: [
-    'http://i.imgur.com/JBbb77q.gif',
-    'http://i.imgur.com/0Hp3N0q.gif',
-    'http://i.imgur.com/mfYNrVs.gif',
-    'http://i.imgur.com/IHSmDlD.gif',
-    'http://i.imgur.com/iQTQTT1.gif',
-    'http://i.imgur.com/w8Eyy6T.gif'
-  ]
+  , router = new AppRouter()
+  , indexData = {
+    favReddits: [
+      '/r/gifs'
+    , '/r/gif'
+    , '/r/reactiongifs'
+    , '/r/animalsbeingjerks'
+    , '/r/thestopgirl'
+    ]
+  , background: [
+      'http://i.imgur.com/JBbb77q.gif'
+    , 'http://i.imgur.com/0Hp3N0q.gif'
+    , 'http://i.imgur.com/mfYNrVs.gif'
+    , 'http://i.imgur.com/IHSmDlD.gif'
+    , 'http://i.imgur.com/iQTQTT1.gif'
+    , 'http://i.imgur.com/w8Eyy6T.gif'
+    ]
 }
 
-Backbone.history.start();
+Backbone.history.start()
