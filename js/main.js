@@ -17,8 +17,10 @@ var Link = Backbone.Model.extend({
 , parse: function(response){
     console.log("parsing!")
     var res
+    // If parsing a response from reddit, it will be an array, otherwise it is json from the collection
     if (Object.prototype.toString.call(response) === '[object Array]'){
       res = parseGifObject(response[0].data.children[0].data)
+      linksList.add(res)
     } else {
       res = response
     }
@@ -66,15 +68,19 @@ var LinksList = Backbone.Collection.extend({
 , parse: function(response) {
     console.log('parsing collection')
     var collection = []
+    this.newest = undefined
     for(var i = 0; i < response.data.children.length; i++){
       var link = response.data.children[i].data
       link = parseGifObject(link)
 
-      if(link !== undefined){
-        collection.push(link)
-      }
+      if(link && !this.newest) this.newest = link.id
+      if(link) collection.push(link)
     }
+
+    // TODO: fix next/prev links when adding to collection. Possibly not adding properly.
+
     // Add next and previous links
+    collection[0].prev = this.lastLink
     for(var i = 0; i < collection.length; i++){
       if(i + 1 < collection.length){
         collection[i].next = collection[i+1].id
@@ -83,12 +89,15 @@ var LinksList = Backbone.Collection.extend({
         collection[i].prev = collection[i-1].id
       }
     }
+
     this.before = response.data.before
     this.after = response.data.after
+    this.lastLink = collection[collection.length-1].id
+
     return collection
   }
 , url: function() {
-    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=10&after=" + this.after
+    return "http://www.reddit.com/r/" + this.subreddit + "/.json?limit=" + fetchLimit + "&after=" + this.after
   }
 })
 
@@ -120,11 +129,14 @@ var LinkView = Backbone.View.extend({
     var template
 
     // TODO: 2 cases, enter app fresh or reach end of collection
-    if((typeof model.get('next') == 'undefined') && (linksList.models.length <= 1)){
+    if(typeof model.get('next') == 'undefined'){
       linksList = new LinksList({subreddit: model.get('subreddit'), after: 't3_' + model.id})
       linksList.fetch({
-        success: function(linksList){
-          _this.model.set({ next: linksList.models[0].id })
+        remove: false
+      , add: true
+      , success: function(linksList){
+          console.log("LINK FETCH newest:", linksList.newest, "collection length", linksList.models.length)
+          _this.model.set({ next: linksList.newest })
           linksList.models[0].set({ prev: model.id })
           linksList.add(_this.model)
           template = _.template( $('#tpl-link').html(), {link: model} )
@@ -270,7 +282,6 @@ var AppRouter = Backbone.Router.extend({
       })
     }
 
-    // Create the view
     var linkView = new LinkView()
 
     // Fetch the model if it wasnt found, otherwise render
@@ -306,6 +317,7 @@ var AppRouter = Backbone.Router.extend({
 })
 
 // GO BABY GO!
+var fetchLimit = 100
 var linksList = new LinksList({ subreddit: 'gifs' })
   , router = new AppRouter()
   , indexData = {
