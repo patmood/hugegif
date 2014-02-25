@@ -321,6 +321,7 @@ var linksList = new LinksList({ subreddit: 'gifs' })
     , '/r/gif'
     , '/r/reactiongifs'
     , '/r/animalsbeingjerks'
+    , '/r/perfectloops'
     , '/r/thestopgirl'
     ]
   , background: [
