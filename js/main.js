@@ -103,7 +103,7 @@ var parseGifObject = function(obj){
     var imgurId = (/^.+imgur\.com\/(\w+$)/ig).exec(obj.url)[1]
     obj.url = 'http://i.imgur.com/'+imgurId+'.gif'
     return obj
-  }else if(obj.url.match(/hugegif.com/ig) && !obj.url.match(/\/r\//igi)){
+  }else if(obj.url.match(/hugegif.com/ig) && !obj.url.match(/\/r\//ig)){
     // handle hugegif links that go to imgur
     var imgurId = obj.url.match(/\w+$/)
     obj.url = 'http://i.imgur.com/'+imgurId+'.gif'
