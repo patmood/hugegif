@@ -248,13 +248,13 @@ var NotFoundView = Backbone.View.extend({
 var AppRouter = Backbone.Router.extend({
   initialize: function() {
     return this.bind('all', this._trackPageview)
-, }
-  _trackPageview: function() {
+  }
+, _trackPageview: function() {
     var url
     url = Backbone.history.getFragment()
     return _gaq.push(['_trackPageview', "/" + url])
-, }
-  routes:{
+  }
+, routes:{
     '':'index'
   , 'r/:sub(/)':'subreddit'
   , 'r/:sub/:id(/)':'link'
