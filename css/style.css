@@ -94,7 +94,8 @@ button:disabled {
   color: #7f7f7f;
 }
 .feature {
-  width: 300px;
+  width: 90%;
+  max-width: 300px;
   font-size: 24px;
   margin: 10px auto;
   padding: 10px 5px;
@@ -130,7 +131,13 @@ button:disabled {
 }
 @media screen and (min-width: 0px) and (max-width: 800px) {
   #next,#prev,#subreddit { display: none; }
-  #index-title { font-size: 70px; }
+  #index-title { font-size: 60px; }
+  #title, #title a, #title h1 { font-size: 24px; line-height: 20px; }
+  #home {
+    position: fixed;
+    bottom: 0px;
+    left: 5px;
+  }
 }
 #prev:hover::after, #next:hover::after {
   position: absolute;
