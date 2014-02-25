@@ -28,20 +28,20 @@
 
   <script type="text/template" id="tpl-link">
     <div class="overlay">
-      <button id="home">
-       <svg class="home" height="16px" id="Layer_1" style="enable-background:new 0 0 16 16;" version="1.1" viewBox="0 0 16 16" width="16px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M15.45,7L14,5.551V2c0-0.55-0.45-1-1-1h-1c-0.55,0-1,0.45-1,1v0.553L9,0.555C8.727,0.297,8.477,0,8,0S7.273,0.297,7,0.555  L0.55,7C0.238,7.325,0,7.562,0,8c0,0.563,0.432,1,1,1h1v6c0,0.55,0.45,1,1,1h3v-5c0-0.55,0.45-1,1-1h2c0.55,0,1,0.45,1,1v5h3  c0.55,0,1-0.45,1-1V9h1c0.568,0,1-0.437,1-1C16,7.562,15.762,7.325,15.45,7z"/></svg>
-      </button>
-      <button id="prev" <% if(!link.get('prev')) { %>disabled<% } %>>Prev</button>
-      <button id="next" <% if(!link.get('next')) { %>disabled<% } %>>Next</button>
-      <div id="title">
-        <h1>
-          <a href="<%= 'http://reddit.com' + link.get('permalink') %>" target="_blank">
-            <%= link.get('title') %>
-          </a>
-        </h1>
-      </div>
-    </div>
 
+      <div class="nav-buttons">
+        <button id="home">
+         <svg class="home" height="16px" id="Layer_1" style="enable-background:new 0 0 16 16;" version="1.1" viewBox="0 0 16 16" width="16px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M15.45,7L14,5.551V2c0-0.55-0.45-1-1-1h-1c-0.55,0-1,0.45-1,1v0.553L9,0.555C8.727,0.297,8.477,0,8,0S7.273,0.297,7,0.555  L0.55,7C0.238,7.325,0,7.562,0,8c0,0.563,0.432,1,1,1h1v6c0,0.55,0.45,1,1,1h3v-5c0-0.55,0.45-1,1-1h2c0.55,0,1,0.45,1,1v5h3  c0.55,0,1-0.45,1-1V9h1c0.568,0,1-0.437,1-1C16,7.562,15.762,7.325,15.45,7z"/></svg>
+        </button>
+        <button id="prev" <% if(!link.get('prev')) { %>disabled<% } %>>Prev</button>
+        <button id="next" <% if(!link.get('next')) { %>disabled<% } %>>Next</button>
+      </div>
+
+      <a href="<%= 'http://reddit.com' + link.get('permalink') %>" target="_blank" class="link-title">
+        <%= link.get('title') %>
+      </a>
+
+    </div>
     <div id="huge">
       <img id="hugegif" src=<%= link.get('url') %>>
     </div>
@@ -50,10 +50,8 @@
   <script type="text/template" id="tpl-imgur-link">
     <% if(image.get('title')){ %>
       <div class="overlay">
-        <div id="title">
-          <h1>
-            <%= image.get('title') %>
-          </h1>
+        <div class="link-title title-flush">
+          <%= image.get('title') %>
         </div>
       </div>
     <% } %>

@@ -84,7 +84,7 @@ button {
   color: #fff;
   cursor: pointer;
   padding: 5px 10px;
-  margin: 10px 2px;
+  margin: 8px 2px;
   outline: none;
   position: relative;
   border-radius: 5px;
@@ -110,14 +110,15 @@ button:disabled {
 }
 #prev { display: inline-block; }
 #next { display: inline-block; }
-#title { padding: 5px; }
-#title, #title h1, #title a{
-  color: #fff;
-  font-size: 36px;
+.link-title {
+  padding: 5px 5px 5px 175px;
   display: inline-block;
+  color: #fff;
+  text-align: left;
+  font-size: 36px;
   text-decoration: none;
 }
-#title a:hover {
+.link-title:hover {
   color: #e67e22;
 }
 #subreddit {
@@ -132,7 +133,10 @@ button:disabled {
 @media screen and (min-width: 0px) and (max-width: 800px) {
   #next,#prev,#subreddit { display: none; }
   #index-title { font-size: 60px; }
-  #title, #title a, #title h1 { font-size: 24px; line-height: 20px; }
+  .link-title {
+    font-size: 24px;
+    padding-left: 5px;
+  }
   #home {
     position: fixed;
     bottom: 0px;
@@ -153,3 +157,9 @@ button:disabled {
 .home {
   fill: #fff;
 }
+.nav-buttons {
+  position: absolute;
+  text-align: left;
+  width: 200px;
+}
+.title-flush { padding: 5px; }
