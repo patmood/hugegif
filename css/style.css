@@ -129,7 +129,8 @@ button:disabled {
   width: 130px;
 }
 @media screen and (min-width: 0px) and (max-width: 800px) {
-  #next,#prev,#subreddit { display: none; };
+  #next,#prev,#subreddit { display: none; }
+  #index-title { font-size: 70px; }
 }
 #prev:hover::after, #next:hover::after {
   position: absolute;
