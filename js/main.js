@@ -20,7 +20,7 @@ var Link = Backbone.Model.extend({
     // If parsing a response from reddit, it will be an array, otherwise it is json from the collection
     if (Object.prototype.toString.call(response) === '[object Array]'){
       res = parseGifObject(response[0].data.children[0].data)
-      linksList.add(res)
+      linksList.reset(res)
     } else {
       res = response
     }
@@ -50,10 +50,10 @@ var Imgur = Backbone.Model.extend({
 var LinksList = Backbone.Collection.extend({
   initialize: function(obj){
     this.subreddit = obj.subreddit
-    this.after = obj.after
   }
 , model: Link
 , sync: function(method, model, options) {
+    this.after = 't3_' + _.last(this.models).id
     var params = _.extend({
       type: 'GET'
     , dataType: 'jsonp'
@@ -77,10 +77,7 @@ var LinksList = Backbone.Collection.extend({
       if(link) collection.push(link)
     }
 
-    // TODO: fix next/prev links when adding to collection. Possibly not adding properly.
-
     // Add next and previous links
-    collection[0].prev = this.lastLink
     for(var i = 0; i < collection.length; i++){
       if(i + 1 < collection.length){
         collection[i].next = collection[i+1].id
@@ -89,10 +86,7 @@ var LinksList = Backbone.Collection.extend({
         collection[i].prev = collection[i-1].id
       }
     }
-
-    this.before = response.data.before
-    this.after = response.data.after
-    this.lastLink = collection[collection.length-1].id
+    collection[0].prev = _.last(linksList.models).id
 
     return collection
   }
@@ -130,16 +124,15 @@ var LinkView = Backbone.View.extend({
 
     // TODO: 2 cases, enter app fresh or reach end of collection
     if(typeof model.get('next') == 'undefined'){
-      linksList = new LinksList({subreddit: model.get('subreddit'), after: 't3_' + model.id})
+      // linksList = new LinksList({subreddit: model.get('subreddit'), after: 't3_' + model.id})
       linksList.fetch({
         remove: false
       , add: true
       , success: function(linksList){
           console.log("LINK FETCH newest:", linksList.newest, "collection length", linksList.models.length)
           _this.model.set({ next: linksList.newest })
-          linksList.models[0].set({ prev: model.id })
-          linksList.add(_this.model)
-          template = _.template( $('#tpl-link').html(), {link: model} )
+          linksList.set(_this.model, {remove: false})
+          template = _.template( $('#tpl-link').html(), {link: _this.model} )
           _this.$el.html(template)
         },
         error: function(){
@@ -150,8 +143,6 @@ var LinkView = Backbone.View.extend({
       template = _.template( $('#tpl-link').html(), {link: model} )
       _this.$el.html(template)
     }
-
-
   }
 , events: {
     'keydown' : 'keyNav'
@@ -273,16 +264,12 @@ var AppRouter = Backbone.Router.extend({
 , link: function(sub, id){
     this.unbindAll()
     // TODO: this logic should prolly go into the view initializer or something
-    var link = new Link({sub: sub, id: id})
+    var foundLink
+      , linkView = new LinkView()
+      , link = new Link({sub: sub, id: id})
 
     // Search the collection (if one exists)
-    if(linksList){
-      var foundLink = linksList.find(function(model) {
-        return model.get('id') === link.id
-      })
-    }
-
-    var linkView = new LinkView()
+    if(linksList) foundLink = linksList.findWhere({id: id})
 
     // Fetch the model if it wasnt found, otherwise render
     if(typeof foundLink === 'undefined'){

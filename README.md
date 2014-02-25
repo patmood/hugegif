@@ -5,7 +5,6 @@ For the ultimate reddit gif viewing experience using backbone.js and the Reddit.
 [DEMO](http://patmood.github.io/hugegif)
 
 ## TODO
-- add to the collection when reaching the end (partially done - models get replaced, not added)
 - show 'not found' when going to an individual link that fails to fetch
 - upload image
 - media queries to make sure mobile looks hot
