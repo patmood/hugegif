@@ -301,7 +301,7 @@ var AppRouter = Backbone.Router.extend({
   trackPageview: function() {
     var url
     url = Backbone.history.getFragment()
-    return ga('send', 'pageview', "/#{url}")
+    return ga('send', 'pageview', '/' + url )
   }
 , routes:{
     '':'index'
