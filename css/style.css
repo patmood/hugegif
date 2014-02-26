@@ -18,6 +18,14 @@ time, mark, audio, video {
   font: inherit;
   vertical-align: baseline;
 }
+a {
+  color: #428bca;
+  text-decoration: none;
+}
+a:hover, a:focus {
+  color: #005580;
+  text-decoration: underline;
+}
 table {
   border-collapse: collapse;
   border-spacing: 0;
@@ -37,7 +45,7 @@ h3 {
   color: #444;
   margin: 15px 0px 20px 0px;
 }
-#index-title {
+.index-title {
   font-size: 120px;
   font-weight: 900;
   color: #222;
@@ -52,7 +60,7 @@ h3 {
   text-align: center;
   margin-bottom: 20px;
 }
-.index-container {
+#index-container {
   background: rgba(255,255,255,.8);
   max-width: 800px;
   padding: 20px;
@@ -93,6 +101,14 @@ button {
 button:disabled {
   color: #7f7f7f;
 }
+.upload-butt {
+  background: #2ecc71;
+  width: 200px;
+  font-size: 24px;
+  margin: 10px auto;
+  padding: 10px 5px;
+  display: block;
+}
 .feature {
   width: 90%;
   max-width: 300px;
@@ -130,19 +146,6 @@ button:disabled {
   font-size: 18px;
   width: 130px;
 }
-@media screen and (min-width: 0px) and (max-width: 800px) {
-  #next,#prev,#subreddit { display: none; }
-  #index-title { font-size: 60px; }
-  .link-title {
-    font-size: 24px;
-    padding-left: 5px;
-  }
-  #home {
-    position: fixed;
-    bottom: 0px;
-    left: 5px;
-  }
-}
 #prev:hover::after, #next:hover::after {
   position: absolute;
   top: 40px;
@@ -163,3 +166,37 @@ button:disabled {
   width: 200px;
 }
 .title-flush { padding: 5px; }
+#img-url {
+  border-radius: 5px;
+  border: solid 2px #888;
+  text-align: center;
+  margin-bottom: 20px;
+  width: 90%;
+  font-size: 24px;
+  margin: 10px auto;
+  padding: 10px 5px;
+  display: inline-block;
+}
+.inline-form #img-url {
+  display: inline-block;
+  width: calc(100% - 170px);
+}
+.inline-form button {
+  display: inline-block;
+  width: 150px;
+}
+
+/* MEDIA QUERIES */
+@media screen and (min-width: 0px) and (max-width: 800px) {
+  #next,#prev,#subreddit { display: none; }
+  .index-title { font-size: 60px; }
+  .link-title {
+    font-size: 24px;
+    padding-left: 5px;
+  }
+  #home {
+    position: fixed;
+    bottom: 0px;
+    left: 5px;
+  }
+}

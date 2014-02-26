@@ -4,5 +4,4 @@ For the ultimate reddit gif viewing experience using backbone.js and the Reddit.
 
 [DEMO](http://patmood.github.io/hugegif)
 
-## TODO
-- upload images to imgur
+

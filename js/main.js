@@ -1,3 +1,5 @@
+var router
+
 // MODELS
 var Link = Backbone.Model.extend({
   initialize: function(obj){
@@ -200,6 +202,7 @@ var IndexView = Backbone.View.extend({
 , events: {
     'click .feature' : 'featureSub'
   , 'keydown #enter-sub' : 'featureSub'
+  , 'click #upload-image' : 'uploadImage'
   }
 , featureSub: function(e){
     if(e.type === 'keydown' && e.keyCode === 13) {
@@ -208,6 +211,9 @@ var IndexView = Backbone.View.extend({
     } else if(e.type === 'click') {
       router.navigate(e.target.innerText, {trigger: true})
     }
+  }
+, uploadImage: function(){
+    router.navigate('/upload', {trigger: true})
   }
 })
 
@@ -243,6 +249,52 @@ var NotFoundView = Backbone.View.extend({
   }
 })
 
+var UploadView = Backbone.View.extend({
+  el: '#index-container'
+, initialize: function() {
+    this.render()
+  }
+, render: function(){
+    var template = _.template( $('#tpl-upload').html() )
+    this.$el.html(template)
+  }
+, events: {
+    'submit form' : 'upload'
+  , 'click #home' : 'index'
+  }
+, upload: function(){
+    // var file = this.get("image").split(",")[1];
+    var imgUrl = $('#img-url')[0].value
+
+    if(!imgUrl.match(/\.gif$/ig)){
+      alert("Must be a gif!")
+      return
+    }
+    console.log('Uploading to imgur:', imgUrl)
+    var fd = new FormData()
+    fd.append('image', imgUrl)
+
+    var xhr = new XMLHttpRequest()
+    xhr.open('POST', 'https://api.imgur.com/3/image.json')
+    xhr.onload = function(){
+      console.log(xhr.responseText)
+      var error = JSON.parse(xhr.responseText).data.error
+      if(error){
+        alert(error)
+        return
+      }
+      var imgurId = JSON.parse(xhr.responseText).data.id
+      console.log(imgurId)
+      router.navigate('/' + imgurId, {trigger: true})
+    }
+    xhr.setRequestHeader('Authorization', 'Client-ID 2b577f722a2e8e9')
+    xhr.send(fd)
+  }
+, index: function(){
+    router.navigate('/', {trigger: true})
+  }
+})
+
 
 // ROUTER
 var AppRouter = Backbone.Router.extend({
@@ -256,15 +308,21 @@ var AppRouter = Backbone.Router.extend({
   }
 , routes:{
     '':'index'
-  , 'r/:sub(/)':'subreddit'
-  , 'r/:sub/:id(/)':'link'
-  , ':imgur_id':'imgur'
-  , '*path':'notFound'
+  , 'upload(/)' : 'upload'
+  , 'r/:sub(/)' : 'subreddit'
+  , 'r/:sub/:id(/)' : 'link'
+  , ':imgur_id' : 'imgur'
+  , '*path' : 'notFound'
   }
 , index: function(){
     this.unbindAll()
     var indexView = new IndexView()
   }
+, upload: function(){
+    this.unbindAll()
+    var indexView = new IndexView()
+    var uploadView = new UploadView()
+}
 , subreddit: function(sub){
     this.unbindAll()
     var linksListView = new LinksListView({subreddit: sub})
@@ -294,7 +352,6 @@ var AppRouter = Backbone.Router.extend({
     } else {
       linkView.render(foundLink)
     }
-
   }
 , imgur: function(imgur_id){
     this.unbindAll()
@@ -308,7 +365,6 @@ var AppRouter = Backbone.Router.extend({
     $('#container').unbind()
     $("body").unbind('keydown')
   }
-
 })
 
 // GO BABY GO!
