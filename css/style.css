@@ -140,6 +140,7 @@ button:disabled {
 }
 .link-title:hover {
   color: #e67e22;
+  text-decoration: none;
 }
 #subreddit {
   margin: 10px 5px;
