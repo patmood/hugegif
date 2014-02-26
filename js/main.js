@@ -298,13 +298,10 @@ var UploadView = Backbone.View.extend({
 
 // ROUTER
 var AppRouter = Backbone.Router.extend({
-  initialize: function() {
-    return this.bind('all', this._trackPageview)
-  }
-, _trackPageview: function() {
+  trackPageview: function() {
     var url
     url = Backbone.history.getFragment()
-    return _gaq.push(['_trackPageview', "/" + url])
+    return ga('send', 'pageview', "/#{url}")
   }
 , routes:{
     '':'index'
@@ -391,3 +388,4 @@ var linksList = new LinksList({ subreddit: 'gifs' })
 }
 
 Backbone.history.start()
+Backbone.history.on("route", router.trackPageview)
