@@ -66,6 +66,10 @@ h3 {
   padding: 20px;
   margin: 30px auto;
   border-radius: 10px;
+  -webkit-box-shadow: 0 1px 5px 1px rgba(0,0,0,0.3);
+  -moz-box-shadow: 0 1px 5px 1px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 5px 1px rgba(0,0,0,0.3);
+
 }
 #huge {
   position: fixed;
@@ -184,6 +188,10 @@ button:disabled {
 .inline-form button {
   display: inline-block;
   width: 150px;
+}
+.fine-print {
+  font-size: 14px;
+  text-align: right;
 }
 
 /* MEDIA QUERIES */
